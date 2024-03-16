@@ -118,6 +118,7 @@ for place in map:
     if district_data is not None:
         for element in district_data:
             element.reset_index(drop=True, inplace=True)
-            write(str(place), district_data)
+            print(str(place))
+            write(str(place), element)
 
 
