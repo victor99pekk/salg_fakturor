@@ -1,6 +1,7 @@
 import pandas as pd
 from Places import Place
 from Task import Task
+from WriteToExcel import write
 
 def getColumnIndex(df, list_of_names):
     for names in list_of_names:
@@ -111,6 +112,9 @@ columns_to_keep = ['Datum', 'Tjänst', 'Distrikt', 'Resor (km)', 'Resor (km)', '
 
 
 map = mapOfDataFrames(data, krim, createPlaces(), district_col)
+
+for place in map:
+    write(str(place), pd.DataFrame(map[place]))
 
 list = getDistrictData("flempan", map)
 print(list)
