@@ -114,11 +114,10 @@ columns_to_keep = ['Datum', 'Tjänst', 'Distrikt', 'Resor (km)', 'Resor (km)', '
 map = mapOfDataFrames(data, krim, createPlaces(), district_col)
 
 for place in map:
-    write(str(place), pd.DataFrame(map[place]))
-
-list = getDistrictData("flempan", map)
-print(list)
-
-#print(list)
+    district_data = getDistrictData(place, map)
+    if district_data is not None:
+        for element in district_data:
+            element.reset_index(drop=True, inplace=True)
+            write(str(place), district_data)
 
 

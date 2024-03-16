@@ -3,10 +3,12 @@ from openpyxl import Workbook
 
 
 def write(fileName, df):
-    path = '/Users/victorpekkari/Documents/salg/outputFiles/'
+    #path = '/Users/victorpekkari/Documents/salg/outputFiles/'
+    path = '/outputFiles/'
     format = '.xls'
     file = path + fileName + format
-    with pd.ExcelWriter(file, mode='a', engine='openpyxl') as writer:
+    print(file)
+    with pd.ExcelWriter(file, mode='w', engine='openpyxl') as writer:
         df.to_excel(writer, index=False, sheet_name='Sheet1', startrow=0, header=False)
 
 def delete_contents(file):
