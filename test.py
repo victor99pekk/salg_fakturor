@@ -39,13 +39,20 @@ def mapOfDataFrames(df, krim, places, district_col):
         map[place] = []
     return fillMap(map, df, krim, district_col)
 
+def validTask(task):
+    if any(char.isdigit() for char in task):
+        return False
+    
+
 def fillMap(map, df, krim, district_col):
     for i in range(df.shape[0]):    #iterate map with regular places
         object = df.iloc[i, district_col].lower()
         for place in map:
             if object in place.aliases and not df.iloc[i, :].empty:
-                #print(df.iloc[i, :])
-                map[place].append(df.iloc[i, :])
+                if validTask(df.iloc[i,'Tjänst']):
+                    map[place].append(df.iloc[i, :])
+                else:
+                    map[Place("misnamed", {"misnamed", "felnamn"})].append(df.iloc[i, :])
                 break
     for i in range(krim.shape[0]):  #iterate map with krimvården
         if  not krim.iloc[i, :].empty:
@@ -75,6 +82,7 @@ def getDistrictData(name, map):
     for place in map:
         if name in place.aliases:
             return map[place]
+
 
 
 path = "/Users/victorpekkari/Documents/salg/data/data2.xls"
