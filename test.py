@@ -45,34 +45,32 @@ def validTask(task):
     return True
     
 def copySpecificCols(data, i):
-    columns = ["Datum", "Tid", "Tjänst", "Distrikt", "Kostnad","Resor (km)"]
-    df = pd.DataFrame(columns=columns)
     df = data.iloc[i].copy()
-    """ df.iloc[1]['Datum'] = data.iloc[i]['Datum']
-    df[1]['Tid'] = data.iloc[i]['Tid']
-    df[0]['Tjänst'] = data.iloc[i]['Tjänst']
-    df[0]['Distrikt'] = data.iloc[i]['Distrikt']
-    df[0]['Kostnad'] = data.iloc[i]['Kostnad']
-    df[0]['Resor (km)'] = data.iloc[i]['Resor (km)'] """
+    for columns in df:
+        if str(columns).lower() not in columns_to_keep:
+            del df[columns]
+            #df.drop(columns, inplace=True)
     return df
     
 #8 col
 def fillMap(map, df, krim, district_col):
     for i in range(df.shape[0]):    #iterate map with regular places
         
-        row = copySpecificCols(data, i+1)
+        row = copySpecificCols(data, i)
         for place in map:
-            print(row, "\n")
-            if row.loc['Distrikt'] in place.aliases and not row.empty:
-                if validTask(row.iloc['Tjänst']):
+            site = str(row.loc['Distrikt']).lower()
+
+            if site in place.aliases and not row.empty:
+                print("yes")
+                if validTask(str(row.loc['Tjänst'])):
                     map[place].append(row)
                 else:
                     map[Place("misnamed", {"misnamed", "felnamn"})].append(row)
                 break
     for i in range(krim.shape[0]):  #iterate map with krimvården
-        row = copySpecificCols(data, i)
+        row = copySpecificCols(krim, i)
         if not row.empty:
-            if validTask(row.iloc[0]['Tjänst']):
+            if validTask(str(row.loc['Tjänst'])):
                 map[Place("krim", ["kvv", "krim"])].append(row)
             else:
                 map[Place("misnamed", {"misnamed", "felnamn"})].append(row)
@@ -109,11 +107,13 @@ data, krim = getDataFrames(path)
 
 district_col = district_col(data)
 
+columns_to_keep = {'Datum', 'Tjänst', 'Distrikt', 'Resor (km)', 'Resor (km)', 'Resor (kostnad)', 'Kostnad'}
+
 
 map = mapOfDataFrames(data, krim, createPlaces(), district_col)
 
-list = getDistrictData("västberga", map)
-#print(list)
+list = getDistrictData("flempan", map)
+print(list)
 
 #print(list)
 
