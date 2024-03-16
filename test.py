@@ -41,14 +41,15 @@ def mapOfDataFrames(df, krim, places, district_col):
 
 def fillMap(map, df, krim, district_col):
     for i in range(df.shape[0]):    #iterate map with regular places
+        object = df.iloc[i, district_col].lower()
         for place in map:
-            if df.iloc[i, district_col] == place and not df.iloc[i, :].empty:
-                print(df.iloc[i, :])
+            if object in place.aliases and not df.iloc[i, :].empty:
+                #print(df.iloc[i, :])
                 map[place].append(df.iloc[i, :])
                 break
     for i in range(krim.shape[0]):  #iterate map with krimvården
         if  not krim.iloc[i, :].empty:
-            print(krim.iloc[i, :])
+            #print(krim.iloc[i, :])
             map[Place("krim", ["kvv", "krim"])].append(krim.iloc[i, :])
 
     return map
@@ -72,21 +73,20 @@ def district_col(data):
 
 def getDistrictData(name, map):
     for place in map:
-        if place == name:
+        if name in place.aliases:
             return map[place]
 
 
 path = "/Users/victorpekkari/Documents/salg/data/data2.xls"
 
 data, krim = getDataFrames(path)
-print(data)
 
 district_col = district_col(data)
 
 
 map = mapOfDataFrames(data, krim, createPlaces(), district_col)
 
-list = getDistrictData("flemingsberg", map)
+list = getDistrictData("västberga", map)
 print(list)
 
 #print(list)
