@@ -21,6 +21,9 @@ class Task:
         self.task = task
         self.ValidTasks = create_validTasks()
 
+    def price(self):
+        return 3000
+
     def __str__(self):
         return self.task
     

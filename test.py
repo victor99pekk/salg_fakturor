@@ -43,20 +43,31 @@ def validTask(task):
     if any(char.isdigit() for char in task):
         return False
     
-
+def copySpecificCols(df, data, i):
+    print(data.loc[1+i, 'Datum'])
+    df['Datum'] = data.iloc[1+i, 'Datum']
+    df['Tid'] = data.loc[i, 'Tid']
+    df['Tjänst'] = data.loc[i,'Tjänst']
+    df['Distrikt'] = data.loc[i,'Distrikt']
+    df['Kostnad'] = data.loc[i,'Kostnad']
+    df['Resor (km)'] = data.loc[i,'Resor (km)']
+    print(df)
+    
+#8 col
 def fillMap(map, df, krim, district_col):
     for i in range(df.shape[0]):    #iterate map with regular places
-        object = df.iloc[i, district_col].lower()
+        columns = ["Datum", "Tid", "Tjänst", "Distrikt", "Kostnad","Resor (km)"]
+        row = pd.DataFrame(data, columns=columns)
+        copySpecificCols(row, data, i)
         for place in map:
-            if object in place.aliases and not df.iloc[i, :].empty:
-                if validTask(df.iloc[i,'Tjänst']):
-                    map[place].append(df.iloc[i, :])
+            if row['Distrikt'] in place.aliases and not row.empty:
+                if validTask(row.iloc['Tjänst']):
+                    map[place].append(row)
                 else:
-                    map[Place("misnamed", {"misnamed", "felnamn"})].append(df.iloc[i, :])
+                    map[Place("misnamed", {"misnamed", "felnamn"})].append(row)
                 break
     for i in range(krim.shape[0]):  #iterate map with krimvården
         if  not krim.iloc[i, :].empty:
-            #print(krim.iloc[i, :])
             map[Place("krim", ["kvv", "krim"])].append(krim.iloc[i, :])
 
     return map
