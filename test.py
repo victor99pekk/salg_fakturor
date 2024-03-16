@@ -42,33 +42,39 @@ def mapOfDataFrames(df, krim, places, district_col):
 def validTask(task):
     if any(char.isdigit() for char in task):
         return False
+    return True
     
-def copySpecificCols(df, data, i):
-    print(data.loc[1+i, 'Datum'])
-    df['Datum'] = data.iloc[1+i, 'Datum']
-    df['Tid'] = data.loc[i, 'Tid']
-    df['Tjänst'] = data.loc[i,'Tjänst']
-    df['Distrikt'] = data.loc[i,'Distrikt']
-    df['Kostnad'] = data.loc[i,'Kostnad']
-    df['Resor (km)'] = data.loc[i,'Resor (km)']
-    print(df)
+def copySpecificCols(data, i):
+    columns = ["Datum", "Tid", "Tjänst", "Distrikt", "Kostnad","Resor (km)"]
+    df = pd.DataFrame(data, columns=columns)
+    df['Datum'] = data.iloc[i]['Datum']
+    df['Tid'] = data.iloc[i]['Tid']
+    df['Tjänst'] = data.iloc[i]['Tjänst']
+    df['Distrikt'] = data.iloc[i]['Distrikt']
+    df['Kostnad'] = data.iloc[i]['Kostnad']
+    df['Resor (km)'] = data.iloc[i]['Resor (km)']
+    return df
     
 #8 col
 def fillMap(map, df, krim, district_col):
     for i in range(df.shape[0]):    #iterate map with regular places
-        columns = ["Datum", "Tid", "Tjänst", "Distrikt", "Kostnad","Resor (km)"]
-        row = pd.DataFrame(data, columns=columns)
-        copySpecificCols(row, data, i)
+        
+        row = copySpecificCols(data, i)
         for place in map:
-            if row['Distrikt'] in place.aliases and not row.empty:
+            print(row)
+            if row.iloc[0]['Distrikt'] in place.aliases and not row.empty:
                 if validTask(row.iloc['Tjänst']):
                     map[place].append(row)
                 else:
                     map[Place("misnamed", {"misnamed", "felnamn"})].append(row)
                 break
     for i in range(krim.shape[0]):  #iterate map with krimvården
-        if  not krim.iloc[i, :].empty:
-            map[Place("krim", ["kvv", "krim"])].append(krim.iloc[i, :])
+        row = copySpecificCols(data, i)
+        if not row.empty:
+            if validTask(row.iloc[0]['Tjänst']):
+                map[Place("krim", ["kvv", "krim"])].append(row)
+            else:
+                map[Place("misnamed", {"misnamed", "felnamn"})].append(row)
 
     return map
 
