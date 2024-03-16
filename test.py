@@ -1,11 +1,20 @@
 import pandas as pd
 from Places import Place
 
+def getColumnIndex(df, list_of_names):
+    for names in list_of_names:
+        list = df.index[df.iloc[:, 0] == names].tolist()
+        if len(list) > 0:
+            return list[0] + 1
+    return -1
+
+
+
 def getDataFrames(path):
     df = pd.read_excel(path)
 
-    start = df.index[df.iloc[:, 0] == 'Datum'].tolist()[0] + 1
-    krimvard = df.index[df.iloc[:, 0] == 'KVV'].tolist()[0] + 1
+    start = getColumnIndex(df, ["Datum"])
+    krimvard = getColumnIndex(df, ["Kriminalvården", "KVV", "kvv", "kriminalvården"])
 
     # Create a new DataFrame without the first n rows
     data = df.iloc[start:].copy()
@@ -36,19 +45,21 @@ def fillMap(map, df, krim, district_col):
             if df.iloc[i, district_col] == place and not df.iloc[i, :].empty:
                 print(df.iloc[i, :])
                 map[place].append(df.iloc[i, :])
+                break
     for i in range(krim.shape[0]):  #iterate map with krimvården
         if  not krim.iloc[i, :].empty:
+            print(krim.iloc[i, :])
             map[Place("krim", ["kvv", "krim"])].append(krim.iloc[i, :])
 
     return map
 
 def createPlaces():  #manually create the places
-    norrtalje = Place("norrtälje", ["norrtälje"])
-    sodertalje = Place("södertälje", ["södertälje"])
-    syd = Place("Syd", ["syd", "flemingsberg", "nacka", "flempan", "söderort", "stockholm syd", "västberga"])
-    city = Place("city", ["city"])
-    krim = Place("krim", ["krim", "kvv"])
-    misnamed = Place("misnamed", ["misnamed", "felnamn"])
+    norrtalje = Place("norrtälje", {"norrtälje"})
+    sodertalje = Place("södertälje", {"södertälje"})
+    syd = Place("syd", {"syd", "flemingsberg", "nacka", "flempan", "söderort", "stockholm syd", "västberga"})
+    city = Place("city", {"city", "norrmalm", "söder", "kungsholmen", "vasastan", "östermalm", "city", "stockholm city", "stockholm", "söder", "södermalm", "söderort"})
+    krim = Place("krim", {"krim", "kvv"})
+    misnamed = Place("misnamed", {"misnamed", "felnamn"})
     return [norrtalje, sodertalje, syd, city, misnamed, krim]
 
 
@@ -65,17 +76,19 @@ def getDistrictData(name, map):
             return map[place]
 
 
-path = "/Users/victorpekkari/Documents/salg/data/data1.xls"
+path = "/Users/victorpekkari/Documents/salg/data/data2.xls"
 
 data, krim = getDataFrames(path)
+print(data)
 
 district_col = district_col(data)
 
 
 map = mapOfDataFrames(data, krim, createPlaces(), district_col)
 
-list = getDistrictData("kvv", map)
-#print(list)
+list = getDistrictData("flemingsberg", map)
 print(list)
+
+#print(list)
 
 
