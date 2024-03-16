@@ -46,23 +46,24 @@ def validTask(task):
     
 def copySpecificCols(data, i):
     columns = ["Datum", "Tid", "Tjänst", "Distrikt", "Kostnad","Resor (km)"]
-    df = pd.DataFrame(data, columns=columns)
-    df['Datum'] = data.iloc[i]['Datum']
-    df['Tid'] = data.iloc[i]['Tid']
-    df['Tjänst'] = data.iloc[i]['Tjänst']
-    df['Distrikt'] = data.iloc[i]['Distrikt']
-    df['Kostnad'] = data.iloc[i]['Kostnad']
-    df['Resor (km)'] = data.iloc[i]['Resor (km)']
+    df = pd.DataFrame(columns=columns)
+    df = data.iloc[i].copy()
+    """ df.iloc[1]['Datum'] = data.iloc[i]['Datum']
+    df[1]['Tid'] = data.iloc[i]['Tid']
+    df[0]['Tjänst'] = data.iloc[i]['Tjänst']
+    df[0]['Distrikt'] = data.iloc[i]['Distrikt']
+    df[0]['Kostnad'] = data.iloc[i]['Kostnad']
+    df[0]['Resor (km)'] = data.iloc[i]['Resor (km)'] """
     return df
     
 #8 col
 def fillMap(map, df, krim, district_col):
     for i in range(df.shape[0]):    #iterate map with regular places
         
-        row = copySpecificCols(data, i)
+        row = copySpecificCols(data, i+1)
         for place in map:
-            print(row)
-            if row.iloc[0]['Distrikt'] in place.aliases and not row.empty:
+            print(row, "\n")
+            if row.loc['Distrikt'] in place.aliases and not row.empty:
                 if validTask(row.iloc['Tjänst']):
                     map[place].append(row)
                 else:
@@ -112,7 +113,7 @@ district_col = district_col(data)
 map = mapOfDataFrames(data, krim, createPlaces(), district_col)
 
 list = getDistrictData("västberga", map)
-print(list)
+#print(list)
 
 #print(list)
 
