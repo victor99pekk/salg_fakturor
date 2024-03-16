@@ -1,5 +1,6 @@
 import pandas as pd
 from Places import Place
+from Task import Task
 
 def getColumnIndex(df, list_of_names):
     for names in list_of_names:
@@ -35,22 +36,22 @@ def mapOfDataFrames(df, krim, places, district_col):
     map = {}
     
     for place in places:
-        #map[place] = [pd.DataFrame(columns=df.columns)]
         map[place] = []
     return fillMap(map, df, krim, district_col)
 
 def validTask(task):
     if any(char.isdigit() for char in task):
         return False
+    if task.lower() not in Task.create_validTasks():
+        return False
     return True
     
 def copySpecificCols(data, i):
-    df = data.iloc[i].copy()
-    for columns in df:
-        if str(columns).lower() not in columns_to_keep:
-            del df[columns]
-            #df.drop(columns, inplace=True)
-    return df
+    row = data.iloc[i].copy()
+    row = row[columns_to_keep] 
+    row['Tjänst'] = Task.create_validTasks()[row['Tjänst'].lower()]
+    row['Kostnad'] = Task.price(row['Tjänst'], row['Distrikt'])
+    return row
     
 #8 col
 def fillMap(map, df, krim, district_col):
@@ -61,7 +62,6 @@ def fillMap(map, df, krim, district_col):
             site = str(row.loc['Distrikt']).lower()
 
             if site in place.aliases and not row.empty:
-                print("yes")
                 if validTask(str(row.loc['Tjänst'])):
                     map[place].append(row)
                 else:
@@ -107,7 +107,7 @@ data, krim = getDataFrames(path)
 
 district_col = district_col(data)
 
-columns_to_keep = {'Datum', 'Tjänst', 'Distrikt', 'Resor (km)', 'Resor (km)', 'Resor (kostnad)', 'Kostnad'}
+columns_to_keep = ['Datum', 'Tjänst', 'Distrikt', 'Resor (km)', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']
 
 
 map = mapOfDataFrames(data, krim, createPlaces(), district_col)
