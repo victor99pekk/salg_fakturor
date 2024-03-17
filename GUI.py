@@ -7,16 +7,19 @@ class DragDropWidget(QWidget):
     def __init__(self):
         super().__init__()
 
+        self.targetFolder = ""
+        self.inputPath = ""
+
         # Set up the layout
         layout = QVBoxLayout()
         font1 = QFont("Arial", 20)  # Set font family and size
         font2 = QFont("Arial", 15)
 
         # Create a QLabel to act as the drag-and-drop area
-        self.drag_drop_label = QLabel("Dra hit foldern med filerna som ska samanställas")
-        self.drag_drop_label.setFont(font2)
-        self.drag_drop_label.setStyleSheet("border: 2px dashed #aaa; padding: 20px;")
-        layout.addWidget(self.drag_drop_label)
+        self.folder_label = QTextEdit(self)
+        self.folder_label.setFont(font2)
+        layout.addWidget(self.folder_label)
+        self.folder_label.setReadOnly(True)
 
         self.textBox = QTextEdit(self)
         self.textBox.setAcceptDrops(True)
@@ -39,13 +42,17 @@ class DragDropWidget(QWidget):
         self.text_field.setPlaceholderText("")
         self.text_field.setMaximumHeight(40)
         self.text_field.setMaximumWidth(220)
-        #layout.addWidget(self.text_field)
+
+        self.open_button = QPushButton("Folder")
+        self.open_button.clicked.connect(self.open_folder)
+
 
         # Create a central widget and set the layout
 
         button_layout = QHBoxLayout()
         button_layout.addWidget(self.button)
         button_layout.addWidget(self.text_field)
+        layout.addWidget(self.open_button)
         layout.addLayout(button_layout)
         
 
@@ -62,13 +69,35 @@ class DragDropWidget(QWidget):
     def dropEvent(self, event):
         for url in event.mimeData().urls():
             file_path = url.toLocalFile()
-            print("Dropped file:", file_path)
+            self.inputPath = file_path
             # Process the dropped file here
     
     def click(self, event):
-        print("Button clicked")
-        self.text_field.setText("Button clicked")
+        self.targetFolder = self.textBox.toPlainText()
+        if self.targetFolder == "" or self.inputPath == "":
+            self.text_field.setText("Namnge folder")
+            self.text_field.setStyleSheet("background-color: red;")
+            print(self.targetFolder, self.inputPath)
+            #self.text_edit.setStyleSheet("color: white;")
+        else:
+            self.text_field.setText("Sammanställning klar")
+            self.text_field.setStyleSheet("background-color: green;")
+            #self.text_edit.setStyleSheet("color: white;")
+            # Call the function to merge the files
+            # merge_files(self.inputPath, self.targetFolder)
 
+    def open_file(self):
+        file_path, _ = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*)")
+        if file_path:
+            with open(file_path, 'r') as file:
+                text = file.read()
+                self.text_edit.setPlainText(text)
+    
+    def open_folder(self):
+        folder_path = QFileDialog.getExistingDirectory(self, "Open Folder")
+        if folder_path:
+            # Perform actions with the selected folder path
+            self.text_field.setText(folder_path)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
