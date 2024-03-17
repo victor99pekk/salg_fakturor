@@ -1,3 +1,4 @@
+import os
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -92,7 +93,16 @@ class DragDropWidget(QWidget):
             self.text_field.setText("Sammanställning klar")
             self.text_field.setStyleSheet("background-color: green;")
             self.textBox.clear()
+
+    def iter_folder(self, folder_path):
+        for filename in os.listdir(folder_path):
+            file_path = os.path.join(folder_path, filename)
             
+            # Check if the current item is a file
+            if os.path.isfile(file_path):
+                # Check if the file has a .xls extension using endswith()
+                if filename.endswith('.xls'):
+                    print("Excel file found:", file_path)
 
     def open_file(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*)")
