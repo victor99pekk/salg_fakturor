@@ -3,6 +3,9 @@ from Place import Place
 from Task import Task
 from WriteToExcel import write2, write
 
+
+columns_to_keep = ['Datum', 'Tjänst', 'Distrikt', 'Resor (km)', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']
+
 def getColumnIndex(df, list_of_names):
     for names in list_of_names:
         list = df.index[df.iloc[:, 0] == names].tolist()
@@ -60,7 +63,7 @@ def copySpecificCols(data, i):
 def fillMap(map, df, krim, district_col):
     for i in range(df.shape[0]):    #iterate map with regular places
         
-        row = copySpecificCols(data, i)
+        row = copySpecificCols(df, i)
         for place in map:
             site = str(row.loc['Distrikt']).lower()
 
@@ -109,26 +112,20 @@ def getDistrictData(name, map):
         if name in place.aliases:
             return map[place]
 
-
-@staticmethod
 def run(input, output):
+
     #path = "/Users/victorpekkari/Documents/salg/data/test.xlsx"
     path = input + "/test.xlsx"
 
     data, krim = getDataFrames(path)
-
-
-    district_col = district_col(data)
-
-    columns_to_keep = ['Datum', 'Tjänst', 'Distrikt', 'Resor (km)', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']
-
 
     map = mapOfDataFrames(data, krim, createPlaces(), district_col)
 
     for place in map:
         district_data = getDistrictData(place, map)
     #element.reset_index(drop=True, inplace=True)
-        write(str(place), district_data)
+        outputPath = output + "/" + str(place) + ".xls"
+        write(outputPath, district_data)
 
 
-
+#run("/Users/victorpekkari/Documents/salg/data", "/Users/victorpekkari/Documents/salg/output")
