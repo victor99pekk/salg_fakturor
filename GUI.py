@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
+from test import *
 
 
 class DragDropWidget(QWidget):
@@ -18,10 +19,7 @@ class DragDropWidget(QWidget):
         self.instruct = QTextEdit(self)
         self.instruct.setFont(font2)
         self.instruct.setPlaceholderText("1. välj input folder (folder med fakturor som ska sammanställas)\n2. Namnge output folder(namn för foldern där excelfilerna kommer ligga)\n3. Klicka på 'Sammanställ'")
-        """ self.instruct.setMaximumHeight(35)
-        self.instruct.setMaximumWidth(200) """
         self.instruct.setMinimumHeight(100)
-        #layout.addWidget(self.folder_label)
         self.instruct.setReadOnly(True)
         layout.addWidget(self.instruct)
 
@@ -31,7 +29,6 @@ class DragDropWidget(QWidget):
         self.folder_label.setPlaceholderText("Välj input folder ->")
         self.folder_label.setMaximumHeight(35)
         self.folder_label.setMaximumWidth(200)
-        #layout.addWidget(self.folder_label)
         self.folder_label.setReadOnly(True)
 
         self.textBox = QTextEdit(self)
@@ -46,8 +43,6 @@ class DragDropWidget(QWidget):
         self.button.setMaximumWidth(110)
         self.button.setStyleSheet("background-color: green;")
         self.button.clicked.connect(self.click)
-        #layout.addWidget(self.button)
-        #self.setStyle(QStyleFactory.create('Fusion'))
 
         self.text_field = QLineEdit()
         self.text_field.setReadOnly(True)
@@ -59,9 +54,6 @@ class DragDropWidget(QWidget):
         self.open_button = QPushButton("Folder")
         self.open_button.clicked.connect(self.open_folder)
 
-
-        # Create a central widget and set the layout
-
         inputFileButton = QHBoxLayout()
         inputFileButton.addWidget(self.folder_label)
         inputFileButton.addWidget(self.open_button)
@@ -72,7 +64,6 @@ class DragDropWidget(QWidget):
         targetFileButton.addWidget(self.text_field)
         layout.addWidget(self.open_button)
         layout.addLayout(targetFileButton)
-        
 
         layout.addWidget(self.textBox)
 
@@ -84,11 +75,10 @@ class DragDropWidget(QWidget):
         else:
             event.ignore()
 
-    def dropEvent(self, event):
+    def dropEvent(self, event):     #currently not being used
         for url in event.mimeData().urls():
             file_path = url.toLocalFile()
             self.inputPath = file_path
-            # Process the dropped file here
     
     def click(self, event):
         self.targetFolder = self.textBox.toPlainText()
@@ -98,11 +88,10 @@ class DragDropWidget(QWidget):
             print(self.targetFolder, self.inputPath)
             #self.text_edit.setStyleSheet("color: white;")
         else:
+            test.run(self.inputPath, self.targetFolder)
             self.text_field.setText("Sammanställning klar")
             self.text_field.setStyleSheet("background-color: green;")
-            #self.text_edit.setStyleSheet("color: white;")
-            # Call the function to merge the files
-            # merge_files(self.inputPath, self.targetFolder)
+            
 
     def open_file(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*)")

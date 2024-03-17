@@ -110,22 +110,25 @@ def getDistrictData(name, map):
             return map[place]
 
 
+@staticmethod
+def run(input, output):
+    #path = "/Users/victorpekkari/Documents/salg/data/test.xlsx"
+    path = input + "/test.xlsx"
 
-path = "/Users/victorpekkari/Documents/salg/data/test.xlsx"
-
-data, krim = getDataFrames(path)
-
-
-district_col = district_col(data)
-
-columns_to_keep = ['Datum', 'Tjänst', 'Distrikt', 'Resor (km)', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']
+    data, krim = getDataFrames(path)
 
 
-map = mapOfDataFrames(data, krim, createPlaces(), district_col)
+    district_col = district_col(data)
 
-for place in map:
-    district_data = getDistrictData(place, map)
+    columns_to_keep = ['Datum', 'Tjänst', 'Distrikt', 'Resor (km)', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']
+
+
+    map = mapOfDataFrames(data, krim, createPlaces(), district_col)
+
+    for place in map:
+        district_data = getDistrictData(place, map)
     #element.reset_index(drop=True, inplace=True)
-    write(str(place), district_data)
+        write(str(place), district_data)
+
 
 
