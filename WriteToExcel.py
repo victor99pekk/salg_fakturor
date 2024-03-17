@@ -4,29 +4,6 @@ import os
 import xlsxwriter as xls
 import xlwt
 
-def write2(fileName, df):
-    path = getPath(fileName)
-    wb = xls.Workbook(path)
-    ws = wb.add_worksheet("Sheet1")
-    ws.write(0, 0, "#")
-    ws.write(0, 1, "Datum")
-    ws.write(0, 2, "Tid")
-    ws.write(0, 3, "Distrikt")
-    ws.write(0, 4, "Tjänst")
-    ws.write(0, 5, "Kostnad")
-    ws.write(0, 6, "Resor (km)")
-    ws.write(0, 7, "Övrigt")
-
-    for index, entry in enumerate(df):
-        ws.write(index+1, 0, df[0])
-        ws.write(index+1, 1, df[1])
-        ws.write(index+1, 2, df[2])
-        ws.write(index+1, 3, df[3])
-        ws.write(index+1, 4, df[4])
-        ws.write(index+1, 5, df[5])
-        ws.write(index+1, 6, df[6])
-        ws.write(index+1, 7, "")
-
 def getPath(fileName):
     path = '/Users/victorpekkari/Documents/salg/outputFiles/'
     #path = '/outputFiles/'

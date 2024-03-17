@@ -2,7 +2,11 @@ import os
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
+import pandas as pd
 from test import run
+from DataKeeper import DataKeeper
+import Place
+from WriteToExcel import write
 
 
 class DragDropWidget(QWidget):
@@ -89,20 +93,27 @@ class DragDropWidget(QWidget):
             print(self.targetFolder, self.inputPath)
             #self.text_edit.setStyleSheet("color: white;")
         else:
-            run(self.inputPath, self.targetFolder)
+            #run(self.inputPath, self.targetFolder)
+            self.iter_folder(self.inputPath, self.targetFolder)
             self.text_field.setText("Sammanställning klar")
             self.text_field.setStyleSheet("background-color: green;")
             self.textBox.clear()
 
-    def iter_folder(self, folder_path):
+    def iter_folder(self, folder_path, target_folder):
+        #dataKeeper = DataKeeper()
+        map = {}
+        for place in Place.getPlaces():
+            map[place] = pd.DataFrame(columns=DataKeeper.columns_to_keep)
+
         for filename in os.listdir(folder_path):
             file_path = os.path.join(folder_path, filename)
-            
-            # Check if the current item is a file
-            if os.path.isfile(file_path):
-                # Check if the file has a .xls extension using endswith()
-                if filename.endswith('.xls'):
-                    print("Excel file found:", file_path)
+            if os.path.isfile(file_path) and filename.endswith('.xls'):
+                #dataKeeper = run(file_path, target_folder, dataKeeper)
+                map = run(file_path, map)
+        for place in Place.getPlaces():
+            outputPath = target_folder + "/" + str(place)
+            write(outputPath, dataKeeper.map[place])
+
 
     def open_file(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*)")

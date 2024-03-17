@@ -2,7 +2,7 @@ import os
 import pandas as pd
 from Place import Place
 from Task import Task
-from WriteToExcel import write2, write
+from WriteToExcel import write
 
 
 columns_to_keep = ['Datum', 'Tjänst', 'Distrikt', 'Resor (km)', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']

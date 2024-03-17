@@ -1,5 +1,5 @@
 import pandas as pd
-import Place
+from Place import Place, getPlaces
 
 class DataKeeper:
 
@@ -8,6 +8,6 @@ class DataKeeper:
         self.targetFolder = ""
         self.inputPath = ""
         self.columns_to_keep = ['Datum', 'Tjänst', 'Distrikt', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']
-        self.places = Place.getPlaces()
+        self.places = getPlaces()
         for place in self.places:
             map[place] = pd.DataFrame(columns=self.columns_to_keep)
