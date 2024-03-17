@@ -15,6 +15,16 @@ class DragDropWidget(QWidget):
         font1 = QFont("Arial", 20)  # Set font family and size
         font2 = QFont("Arial", 15)
 
+        self.instruct = QTextEdit(self)
+        self.instruct.setFont(font2)
+        self.instruct.setPlaceholderText("1. välj input folder (folder med fakturor som ska sammanställas)\n2. Namnge output folder(namn för foldern där excelfilerna kommer ligga)\n3. Klicka på 'Sammanställ'")
+        """ self.instruct.setMaximumHeight(35)
+        self.instruct.setMaximumWidth(200) """
+        self.instruct.setMinimumHeight(100)
+        #layout.addWidget(self.folder_label)
+        self.instruct.setReadOnly(True)
+        layout.addWidget(self.instruct)
+
         # Create a QLabel to act as the drag-and-drop area
         self.folder_label = QTextEdit(self)
         self.folder_label.setFont(font2)
@@ -104,8 +114,9 @@ class DragDropWidget(QWidget):
     def open_folder(self):
         folder_path = QFileDialog.getExistingDirectory(self, "Open Folder")
         if folder_path:
-            # Perform actions with the selected folder path
-            self.text_field.setText(folder_path)
+            self.folder_label.setText("Vald folder: " + folder_path.split("/")[-1])
+            self.folder_label.setStyleSheet("background-color: green;")
+            self.inputPath = folder_path
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
