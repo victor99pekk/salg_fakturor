@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 from Place import Place
 from Task import Task
@@ -112,20 +113,35 @@ def getDistrictData(name, map):
         if name in place.aliases:
             return map[place]
 
-def run(input, output):
+def run(path, dataKeeper1):
 
     #path = "/Users/victorpekkari/Documents/salg/data/test.xlsx"
-    path = input + "/test.xlsx"
 
     data, krim = getDataFrames(path)
 
     map = mapOfDataFrames(data, krim, createPlaces(), district_col)
-
     for place in map:
+        dataframe = getDistrictData(place, map)
+        for i in range(len(dataframe)):
+            dataKeeper1.map[place].loc[len(dataKeeper1.map[place])] = dataframe.iloc[i]
+    return dataKeeper1
+
+def sort(inputFolder, outputFolder):
+    dataKeeper = dataKeeper()
+    for filename in os.listdir(inputFolder):
+            file_path = os.path.join(inputFolder, filename)
+            # Check if the current item is a file, and Check if the file has a .xls extension using endswith()
+            if os.path.isfile(file_path) and filename.endswith('.xls'):
+                dataKeeper = run(file_path, dataKeeper)
+    for place in Place.getPlaces():
+        outputPath = outputFolder + "/" + str(place) + ".xls"
+        write(outputPath, dataKeeper.map[place])
+
+    """ for place in map:
         district_data = getDistrictData(place, map)
     #element.reset_index(drop=True, inplace=True)
         outputPath = output + "/" + str(place) + ".xls"
-        write(outputPath, district_data)
+        write(outputPath, district_data) """
 
 
 #run("/Users/victorpekkari/Documents/salg/data", "/Users/victorpekkari/Documents/salg/output")
