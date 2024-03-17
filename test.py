@@ -113,6 +113,7 @@ columns_to_keep = ['Datum', 'Tjänst', 'Distrikt', 'Resor (km)', 'Resor (km)', '
 
 map = mapOfDataFrames(data, krim, createPlaces(), district_col)
 
+
 for place in map:
     district_data = getDistrictData(place, map)
     if district_data is not None:
