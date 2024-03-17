@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
-from test import *
+from Sorting import sort
 
 
 class DragDropWidget(QWidget):
@@ -88,12 +88,12 @@ class DragDropWidget(QWidget):
             print(self.targetFolder, self.inputPath)
             #self.text_edit.setStyleSheet("color: white;")
         else:
-            test.run(self.inputPath, self.targetFolder)
+            sort(self.inputPath, self.targetFolder)
             self.text_field.setText("Sammanställning klar")
             self.text_field.setStyleSheet("background-color: green;")
             
 
-    def open_file(self):
+    def open_file(self):    #currently not being used
         file_path, _ = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*)")
         if file_path:
             with open(file_path, 'r') as file:

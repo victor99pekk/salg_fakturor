@@ -10,8 +10,6 @@ def getColumnIndex(df, list_of_names):
             return list[0] + 1
     return -1
 
-
-
 def getDataFrames(path):
     df = pd.read_excel(path)
 
@@ -97,7 +95,7 @@ def createPlaces():  #manually create the places
     return [norrtalje, sodertalje, syd, city, misnamed, krim, nord]
 
 
-def district_col(data):
+def find_district_col(data):
     if ('Distrikt' or 'distrikt') in data.columns:
         district_column_index = data.columns.get_loc('Distrikt')
     else:
@@ -110,18 +108,18 @@ def getDistrictData(name, map):
             return map[place]
 
 
+columns_to_keep = ['Datum', 'Tjänst', 'Distrikt', 'Resor (km)', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']
+
+
 @staticmethod
-def run(input, output):
+def sort(input, output):
     #path = "/Users/victorpekkari/Documents/salg/data/test.xlsx"
     path = input + "/test.xlsx"
+    print(path)
 
     data, krim = getDataFrames(path)
 
-
-    district_col = district_col(data)
-
-    columns_to_keep = ['Datum', 'Tjänst', 'Distrikt', 'Resor (km)', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']
-
+    district_col = find_district_col(data)
 
     map = mapOfDataFrames(data, krim, createPlaces(), district_col)
 
