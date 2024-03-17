@@ -18,7 +18,10 @@ class DragDropWidget(QWidget):
         # Create a QLabel to act as the drag-and-drop area
         self.folder_label = QTextEdit(self)
         self.folder_label.setFont(font2)
-        layout.addWidget(self.folder_label)
+        self.folder_label.setPlaceholderText("Välj input folder ->")
+        self.folder_label.setMaximumHeight(35)
+        self.folder_label.setMaximumWidth(200)
+        #layout.addWidget(self.folder_label)
         self.folder_label.setReadOnly(True)
 
         self.textBox = QTextEdit(self)
@@ -49,11 +52,16 @@ class DragDropWidget(QWidget):
 
         # Create a central widget and set the layout
 
-        button_layout = QHBoxLayout()
-        button_layout.addWidget(self.button)
-        button_layout.addWidget(self.text_field)
+        inputFileButton = QHBoxLayout()
+        inputFileButton.addWidget(self.folder_label)
+        inputFileButton.addWidget(self.open_button)
+        layout.addLayout(inputFileButton)
+
+        targetFileButton = QHBoxLayout()
+        targetFileButton.addWidget(self.button)
+        targetFileButton.addWidget(self.text_field)
         layout.addWidget(self.open_button)
-        layout.addLayout(button_layout)
+        layout.addLayout(targetFileButton)
         
 
         layout.addWidget(self.textBox)
