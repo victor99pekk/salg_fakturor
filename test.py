@@ -1,7 +1,7 @@
 import pandas as pd
 from Places import Place
 from Task import Task
-from WriteToExcel import write
+from WriteToExcel import write2
 
 def getColumnIndex(df, list_of_names):
     for names in list_of_names:
@@ -14,6 +14,7 @@ def getColumnIndex(df, list_of_names):
 
 def getDataFrames(path):
     df = pd.read_excel(path)
+
 
     start = getColumnIndex(df, ["Datum"])
     krimvard = getColumnIndex(df, ["Kriminalvården", "KVV", "kvv", "kriminalvården"])
@@ -31,13 +32,14 @@ def getDataFrames(path):
     krim.rename(columns=df.iloc[start-1], inplace=True)
     krim.dropna(subset=[krim.columns[1]], inplace=True)
 
+
     return data, krim
 
 def mapOfDataFrames(df, krim, places, district_col):
     map = {}
     
     for place in places:
-        map[place] = []
+        map[place] = pd.DataFrame(columns=columns_to_keep)
     return fillMap(map, df, krim, district_col)
 
 def validTask(task):
@@ -64,17 +66,23 @@ def fillMap(map, df, krim, district_col):
 
             if site in place.aliases and not row.empty:
                 if validTask(str(row.loc['Tjänst'])):
-                    map[place].append(row)
+                    map[place].loc[len(map[place])] = row
+                    #map[place].append(row, ignore_index=True)
                 else:
-                    map[Place("misnamed", {"misnamed", "felnamn"})].append(row)
+                    p = Place("misnamed", {"misnamed", "felnamn"})
+                    map[p].loc[len(map[p])] = row
+                    #map[Place("misnamed", {"misnamed", "felnamn"})].append(row)
                 break
     for i in range(krim.shape[0]):  #iterate map with krimvården
         row = copySpecificCols(krim, i)
         if not row.empty:
+            p = Place("krim", ["kvv", "krim"])
             if validTask(str(row.loc['Tjänst'])):
-                map[Place("krim", ["kvv", "krim"])].append(row)
+                #map[p].append(row)
+                map[p].loc[len(map[p])] = row
             else:
-                map[Place("misnamed", {"misnamed", "felnamn"})].append(row)
+                map[Place("misnamed", {"misnamed", "felnamn"})].loc[len(map[Place("misnamed", {"misnamed", "felnamn"})])] = row
+                #map[Place("misnamed", {"misnamed", "felnamn"})].append(row)
 
     return map
 
@@ -102,9 +110,10 @@ def getDistrictData(name, map):
 
 
 
-path = "/Users/victorpekkari/Documents/salg/data/data2.xls"
+path = "/Users/victorpekkari/Documents/salg/data/test.xlsx"
 
 data, krim = getDataFrames(path)
+
 
 district_col = district_col(data)
 
@@ -112,14 +121,16 @@ columns_to_keep = ['Datum', 'Tjänst', 'Distrikt', 'Resor (km)', 'Resor (km)', '
 
 
 map = mapOfDataFrames(data, krim, createPlaces(), district_col)
+print(getDistrictData("kvv", map))
 
-
-for place in map:
+""" for place in map:
     district_data = getDistrictData(place, map)
     if district_data is not None:
         for element in district_data:
-            element.reset_index(drop=True, inplace=True)
-            print(str(place))
-            write(str(place), element)
+            if element in set:
+                continue
+            set.add(element)
+            #element.reset_index(drop=True, inplace=True)
+            write2(str(place), element) """
 
 
