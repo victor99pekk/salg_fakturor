@@ -93,7 +93,8 @@ def createPlaces():  #manually create the places
     city = Place("city", {"city", "norrmalm", "söder", "kungsholmen", "vasastan", "östermalm", "city", "stockholm city", "stockholm", "söder", "södermalm", "söderort"})
     krim = Place("krim", {"krim", "kvv"})
     misnamed = Place("misnamed", {"misnamed", "felnamn"})
-    return [norrtalje, sodertalje, syd, city, misnamed, krim]
+    nord = Place("nord", {"nord", "norrort","norrort", "nord", "solna"})
+    return [norrtalje, sodertalje, syd, city, misnamed, krim, nord]
 
 
 def district_col(data):
