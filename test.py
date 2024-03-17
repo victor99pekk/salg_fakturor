@@ -1,7 +1,7 @@
 import pandas as pd
 from Places import Place
 from Task import Task
-from WriteToExcel import write2
+from WriteToExcel import write2, write
 
 def getColumnIndex(df, list_of_names):
     for names in list_of_names:
@@ -121,16 +121,10 @@ columns_to_keep = ['Datum', 'Tjänst', 'Distrikt', 'Resor (km)', 'Resor (km)', '
 
 
 map = mapOfDataFrames(data, krim, createPlaces(), district_col)
-print(getDistrictData("kvv", map))
 
-""" for place in map:
+for place in map:
     district_data = getDistrictData(place, map)
-    if district_data is not None:
-        for element in district_data:
-            if element in set:
-                continue
-            set.add(element)
-            #element.reset_index(drop=True, inplace=True)
-            write2(str(place), element) """
+    #element.reset_index(drop=True, inplace=True)
+    write(str(place), district_data)
 
 

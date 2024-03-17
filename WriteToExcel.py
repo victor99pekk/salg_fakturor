@@ -2,6 +2,7 @@ import pandas as pd
 from openpyxl import Workbook
 import os
 import xlsxwriter as xls
+import xlwt
 
 def write2(fileName, df):
     path = getPath(fileName)
@@ -31,33 +32,37 @@ def getPath(fileName):
     #path = '/outputFiles/'
     format = '.xls'
     file = path + fileName + format
-    print(file)
     os.makedirs(os.path.dirname(file), exist_ok=True)
     return file
 
-
 def write(fileName, df):
     path = '/Users/victorpekkari/Documents/salg/outputFiles/'
-    #path = '/outputFiles/'
     format = '.xls'
     file = path + fileName + format
-    print(file)
     os.makedirs(os.path.dirname(file), exist_ok=True)
 
-    """ if not os.path.exists(file):  # Check if file exists
-        with open(file, "x"):
-            pass """
     if not os.path.exists(file):
         create_xls_file(file)
 
-    with pd.ExcelWriter(file, mode='a', engine='openpyxl') as writer:
-        df.to_excel(writer, index=False, sheet_name='Sheet1', startrow=0, header=False)
+    # Create a new workbook and sheet
+    workbook = xlwt.Workbook()
+    sheet = workbook.add_sheet('Sheet2')
+
+    # Write column names to the first row
+    for j, col_name in enumerate(df.columns):
+        sheet.write(0, j, col_name)
+
+    # Write the DataFrame data
+    for i, row in enumerate(df.values):
+        for j, value in enumerate(row):
+            sheet.write(i+1, j, value)  # Start writing data from the second row
+
+    # Save the workbook to the file
+    workbook.save(file)
 
 def create_xls_file(file_path):
-    # Open the file in write mode
-    with open(file_path, 'x'):
-        # Write some data to the file
-        pass
+    # Create an empty file
+    open(file_path, 'w').close()
 
 def delete_contents(file):
     wb = Workbook()
