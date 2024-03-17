@@ -1,5 +1,5 @@
 import pandas as pd
-from Places import Place
+from Place import Place
 from Task import Task
 from WriteToExcel import write2, write
 
