@@ -9,15 +9,35 @@ class DragDropWidget(QWidget):
 
         # Set up the layout
         layout = QVBoxLayout()
+        font1 = QFont("Arial", 20)  # Set font family and size
+        font2 = QFont("Arial", 15)
 
         # Create a QLabel to act as the drag-and-drop area
-        self.drag_drop_label = QLabel("Drag and drop files here")
+        self.drag_drop_label = QLabel("Dra hit foldern med filerna som ska samanställas")
+        self.drag_drop_label.setFont(font2)
         self.drag_drop_label.setStyleSheet("border: 2px dashed #aaa; padding: 20px;")
         layout.addWidget(self.drag_drop_label)
 
         self.textBox = QTextEdit(self)
         self.textBox.setAcceptDrops(True)
         self.textBox.setPlaceholderText("Namn för folder: (ex: Jan21)")
+        self.textBox.setMaximumHeight(35)
+        self.textBox.setFont(font1)
+
+        self.button = QPushButton("Sammanställ")
+        self.button.setFont(font2)
+        self.button.setMaximumHeight(35)
+        self.button.setMaximumWidth(110)
+        self.button.setStyleSheet("background-color: green;")
+        layout.addWidget(self.button)
+        #self.setStyle(QStyleFactory.create('Fusion'))
+
+        self.text_field = QLineEdit()
+        layout.addWidget(self.text_field)
+
+        # Create a central widget and set the layout
+        
+
         layout.addWidget(self.textBox)
 
         self.setLayout(layout)
