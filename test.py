@@ -39,11 +39,11 @@ def getDataFrames(path):
 
     return data, krim
 
-def mapOfDataFrames(df, krim, places, district_col):
-    map = {}
+def mapOfDataFrames(map, df, krim, places, district_col):
+    #map = {}
     
-    for place in places:
-        map[place] = pd.DataFrame(columns=columns_to_keep)
+    """ for place in places:
+        map[place] = pd.DataFrame(columns=columns_to_keep) """
     return fillMap(map, df, krim, district_col)
 
 def validTask(task):
@@ -56,6 +56,7 @@ def validTask(task):
 def copySpecificCols(data, i):
     row = data.iloc[i].copy()
     row = row[columns_to_keep] 
+    print(row)
     row['Tjänst'] = Task.create_validTasks()[row['Tjänst'].lower()]
     row['Kostnad'] = Task.price(row['Tjänst'], row['Distrikt'])
     return row
@@ -113,18 +114,19 @@ def getDistrictData(name, map):
         if name in place.aliases:
             return map[place]
 
-def run(path, dataKeeper1):
+def run(path, map):
 
     #path = "/Users/victorpekkari/Documents/salg/data/test.xlsx"
 
     data, krim = getDataFrames(path)
 
-    map = mapOfDataFrames(data, krim, createPlaces(), district_col)
+    mapOfDataFrames(map, data, krim, createPlaces(), district_col)
     for place in map:
         dataframe = getDistrictData(place, map)
         for i in range(len(dataframe)):
-            dataKeeper1.map[place].loc[len(dataKeeper1.map[place])] = dataframe.iloc[i]
-    return dataKeeper1
+            map[place].loc[len(map[place])] = dataframe.iloc[i]
+            #dataKeeper1.map[place].loc[len(dataKeeper1.map[place])] = dataframe.iloc[i]
+    #return dataKeeper1
 
 def sort(inputFolder, outputFolder):
     dataKeeper = dataKeeper()

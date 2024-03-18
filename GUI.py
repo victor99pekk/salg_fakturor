@@ -8,6 +8,8 @@ from DataKeeper import DataKeeper
 import Place
 from WriteToExcel import write
 
+columns_to_keep = ['Datum', 'Tjänst', 'Distrikt', 'Resor (km)', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']
+
 
 class DragDropWidget(QWidget):
     def __init__(self):
@@ -103,16 +105,18 @@ class DragDropWidget(QWidget):
         #dataKeeper = DataKeeper()
         map = {}
         for place in Place.getPlaces():
-            map[place] = pd.DataFrame(columns=DataKeeper.columns_to_keep)
+            map[place] = pd.DataFrame(columns=columns_to_keep)
 
         for filename in os.listdir(folder_path):
             file_path = os.path.join(folder_path, filename)
             if os.path.isfile(file_path) and filename.endswith('.xls'):
                 #dataKeeper = run(file_path, target_folder, dataKeeper)
-                map = run(file_path, map)
-        for place in Place.getPlaces():
+                print(file_path)
+                run(file_path, map)
+        for place in map:
             outputPath = target_folder + "/" + str(place)
-            write(outputPath, dataKeeper.map[place])
+            #write(outputPath, dataKeeper.map[place])
+            write(outputPath, map[place])
 
 
     def open_file(self):
