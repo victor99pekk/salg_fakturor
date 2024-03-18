@@ -40,10 +40,6 @@ def getDataFrames(path):
     return data, krim
 
 def mapOfDataFrames(map, df, krim, places, district_col):
-    #map = {}
-    
-    """ for place in places:
-        map[place] = pd.DataFrame(columns=columns_to_keep) """
     return fillMap(map, df, krim, district_col)
 
 def validTask(task):
@@ -56,27 +52,29 @@ def validTask(task):
 def copySpecificCols(data, i):
     row = data.iloc[i].copy()
     row = row[columns_to_keep] 
-    print(row)
     row['Tjänst'] = Task.create_validTasks()[row['Tjänst'].lower()]
     row['Kostnad'] = Task.price(row['Tjänst'], row['Distrikt'])
     return row
     
 #8 col
 def fillMap(map, df, krim, district_col):
+    print()
     for i in range(df.shape[0]):    #iterate map with regular places
-        
+        set = set()
         row = copySpecificCols(df, i)
         for place in map:
+            if place in set:
+                continue
+            set.add(place)
+            print(place)
             site = str(row.loc['Distrikt']).lower()
 
             if site in place.aliases and not row.empty:
                 if validTask(str(row.loc['Tjänst'])):
                     map[place].loc[len(map[place])] = row
-                    #map[place].append(row, ignore_index=True)
                 else:
                     p = Place("misnamed", {"misnamed", "felnamn"})
                     map[p].loc[len(map[p])] = row
-                    #map[Place("misnamed", {"misnamed", "felnamn"})].append(row)
                 break
     for i in range(krim.shape[0]):  #iterate map with krimvården
         row = copySpecificCols(krim, i)
