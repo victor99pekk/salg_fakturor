@@ -5,7 +5,7 @@ from Task import Task
 from WriteToExcel import write
 
 
-columns_to_keep = ['Datum','Tid', 'Tjänst', 'Distrikt', 'Pers.nr.', 'Resor (kostnad)', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']
+columns_to_keep = ['Datum','Tid', 'Tjänst', 'Distrikt', 'Pers.nr.', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']
 
 def start_row(df, list_of_names):
     for names in list_of_names:
@@ -47,7 +47,6 @@ def copySpecificCols(data, i):
     
 #8 col
 def fillMap(map, df, krim):
-    print()
     for i in range(df.shape[0]):    #iterate map with regular places
         row = copySpecificCols(df, i)
         for place in map:
@@ -59,9 +58,7 @@ def fillMap(map, df, krim):
                 else:
                     p = Place("misnamed", {"misnamed", "felnamn"})
                     map[p].loc[len(map[p])] = row
-                print(map)
                 break
-    print(map)
     for i in range(krim.shape[0]):  #iterate map with krimvården
         row = copySpecificCols(krim, i)
         if not row.empty:
