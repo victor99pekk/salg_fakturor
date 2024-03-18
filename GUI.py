@@ -4,7 +4,6 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 import pandas as pd
 from test import run
-from DataKeeper import DataKeeper
 import Place
 from WriteToExcel import write
 
@@ -40,7 +39,7 @@ class DragDropWidget(QWidget):
 
         self.textBox = QTextEdit(self)
         self.textBox.setAcceptDrops(True)
-        self.textBox.setPlaceholderText("Namnge folder:     (ex: Jan21)")
+        self.textBox.setPlaceholderText("Namnge folder:     (ex: Januari21)")
         self.textBox.setMaximumHeight(35)
         self.textBox.setFont(font1)
 
@@ -133,10 +132,10 @@ class DragDropWidget(QWidget):
             self.folder_label.setStyleSheet("background-color: green;")
             self.inputPath = folder_path
 
-if __name__ == "__main__":
+""" if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = DragDropWidget()
     window.setWindowTitle("Faktura Sammanställare")
     window.setGeometry(100, 100, 400, 300)
     window.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec_()) """

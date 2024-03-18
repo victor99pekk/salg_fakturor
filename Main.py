@@ -1,10 +1,18 @@
-from GUI import GUI
+from GUI import DragDropWidget
 from Place import Place
 from Task import Task
+import os
+import sys
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
 
 def main():
-    gui = GUI()
-    gui.mainloop()
+    app = QApplication(sys.argv)
+    window = DragDropWidget()
+    window.setWindowTitle("Faktura Sammanställare")
+    window.setGeometry(100, 100, 400, 300)
+    window.show()
+    sys.exit(app.exec_())
 
 
 if __name__ == "__main__":
