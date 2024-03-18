@@ -8,7 +8,7 @@ from DataKeeper import DataKeeper
 import Place
 from WriteToExcel import write
 
-columns_to_keep = ['Datum', 'Tjänst', 'Distrikt', 'Resor (km)', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']
+columns_to_keep = ['Datum','Tid', 'Tjänst', 'Distrikt', 'Pers.nr.', 'Resor (km)', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']
 
 
 class DragDropWidget(QWidget):
