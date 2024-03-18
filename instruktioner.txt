@@ -12,8 +12,9 @@ Den sista filen innehåller allt som har med kriminalvården att göra.
 
 - INSTRUKTIONER:
 	
-	1. Kontrollera att det är rätt format på filerna som ska matas in, och att de
-	ligger i en gemensam folder som bara innehåler filer som ska sammanställas.
+	1. Kontrollera att det är rätt format på filerna(se nedan) som ska matas in, 
+	och att de ligger i en gemensam folder som bara innehåler filer som ska 
+	sammanställas.
 
 	2. Välj foldern där input-filerna ligger genom att trycka på knappen med texten
 	"folder".
