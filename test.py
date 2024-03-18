@@ -5,7 +5,7 @@ from Task import Task
 from WriteToExcel import write
 
 
-columns_to_keep = ['Datum','Tid', 'Tjänst', 'Distrikt', 'Pers.nr.', 'Resor (km)', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']
+columns_to_keep = ['Datum','Tid', 'Tjänst', 'Distrikt', 'Pers.nr.', 'Resor (kostnad)', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']
 
 def start_row(df, list_of_names):
     for names in list_of_names:
