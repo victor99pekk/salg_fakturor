@@ -1,7 +1,4 @@
 from GUI import DragDropWidget
-from Place import Place
-from Task import Task
-import os
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
