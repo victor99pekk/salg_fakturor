@@ -60,7 +60,7 @@ class DragDropWidget(QWidget):
         self.error.setPlaceholderText("")
         self.error.setMaximumHeight(300)
         self.error.setMaximumWidth(360)
-        self.error.setStyleSheet("background-color: white; color: red;")
+        self.error.setStyleSheet("background-color: white; color: black;")
 
         self.open_button = QPushButton("Folder")
         self.open_button.clicked.connect(self.open_folder)
@@ -107,7 +107,7 @@ class DragDropWidget(QWidget):
         if self.targetFolder == "" or self.inputPath == "":
             self.text_field.setText("Namnge folder")
             self.text_field.setStyleSheet("background-color: red;")
-            print(self.targetFolder, self.inputPath)
+            #print(self.targetFolder, self.inputPath)
         else:
             list = iter_folder(self.inputPath, self.targetFolder)
             if list:
@@ -115,7 +115,8 @@ class DragDropWidget(QWidget):
                 for i in list:
                     message += i + ", "
                 self.error.setText(message)
-                #self.text_field.setStyleSheet("background-color: red;")
+                self.text_field.setStyleSheet("background-color: red;")
+                self.text_field.setText("programmet kördes inte")
             else:
                 self.text_field.setText("Sammanställning klar")
                 self.text_field.setStyleSheet("background-color: green;")

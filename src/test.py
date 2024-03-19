@@ -149,7 +149,6 @@ def getDistrictData(name, map):
             return map[place]
 
 def sameColumns(col1, col2):
-    return False
     for i in range(len(col1)-1):
         if col1[i] != col2[i]:
             return False
