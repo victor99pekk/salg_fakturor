@@ -14,7 +14,8 @@ class DragDropWidget(QWidget):
         # Set up the layout
         layout = QVBoxLayout()
         font1 = QFont("Arial", 20)  # Set font family and size
-        font2 = QFont("Arial", 15)
+        font2 = QFont("Arial", 15,)
+        fontError = QFont("Arial", 10)
 
         self.instruct = QTextEdit(self)
         self.instruct.setFont(font2)
@@ -52,6 +53,15 @@ class DragDropWidget(QWidget):
         self.text_field.setMaximumHeight(40)
         self.text_field.setMaximumWidth(220)
 
+        # error message if wrong format
+        self.error = QLineEdit()
+        self.error.setReadOnly(True)
+        self.error.setFont(font1)
+        self.error.setPlaceholderText("")
+        self.error.setMaximumHeight(300)
+        self.error.setMaximumWidth(360)
+        self.error.setStyleSheet("background-color: white; color: red;")
+
         self.open_button = QPushButton("Folder")
         self.open_button.clicked.connect(self.open_folder)
 
@@ -64,6 +74,7 @@ class DragDropWidget(QWidget):
         targetFileButton.addWidget(self.button)
         targetFileButton.addWidget(self.text_field)
         layout.addWidget(self.open_button)
+        layout.addWidget(self.error)
         layout.addLayout(targetFileButton)
 
         layout.addWidget(self.textBox)
@@ -100,11 +111,11 @@ class DragDropWidget(QWidget):
         else:
             list = iter_folder(self.inputPath, self.targetFolder)
             if list:
-                message = "Felaktig fil: "
+                message = "Felaktigt format på följande: "
                 for i in list:
                     message += i + ", "
-                self.text_field.setText(message)
-                self.text_field.setStyleSheet("background-color: red;")
+                self.error.setText(message)
+                #self.text_field.setStyleSheet("background-color: red;")
             else:
                 self.text_field.setText("Sammanställning klar")
                 self.text_field.setStyleSheet("background-color: green;")

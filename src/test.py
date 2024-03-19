@@ -21,8 +21,6 @@ def getDataFrames(path):
     data.rename(columns=df.iloc[start-1], inplace=True)
     data.dropna(subset=[data.columns[1]], inplace=True)
 
-    print(data)
-
     krim = df.iloc[krimvard:].copy()
     krim.rename(columns=df.iloc[start-1], inplace=True)
     krim.dropna(subset=[krim.columns[1]], inplace=True)
@@ -119,7 +117,6 @@ def fillMap(map, df, krim):
 
             if site in place.aliases and not row.empty:
                 if valid_row(df.iloc[i]):
-                    print("hej")
                     map[place].loc[len(map[place].reset_index(drop=True))] = modifyRow(row)
                 else:
                     p = Place("misnamed", {"misnamed", "felnamn"})
@@ -152,6 +149,7 @@ def getDistrictData(name, map):
             return map[place]
 
 def sameColumns(col1, col2):
+    return False
     for i in range(len(col1)-1):
         if col1[i] != col2[i]:
             return False
@@ -159,8 +157,6 @@ def sameColumns(col1, col2):
 
 def run(path, map, runProgram):
     data, krim = getDataFrames(path)
-    print(data.columns)
-    print(required_columns)
     if not sameColumns(data.columns, required_columns):
         return path.split("/")[-1]
     if not runProgram:
