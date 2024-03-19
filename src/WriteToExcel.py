@@ -29,7 +29,7 @@ def write(fileName, df):
     column_width = 20  # 20 characters wide
     sheet.set_column(0, len(df.columns) - 1, column_width)
     header_format = workbook.add_format({'font_size': 20})  # Adjust font size as needed
-    sheet.write(0, 0, fileName, header_format)
+    sheet.write(0, 0, fileName.split("/")[0], header_format)
 
     # Write column names to the first row
     for j, col_name in enumerate(df.columns):

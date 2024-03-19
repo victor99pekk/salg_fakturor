@@ -1,9 +1,10 @@
 import os
+import re
 import pandas as pd
 from Place import Place
 from Task import Task
-from WriteToExcel import write
-from Constants import columns_to_keep, places
+from WriteToExcel import *
+from Constants import *
 def start_row(df, list_of_names):
     for names in list_of_names:
         list = df.index[df.iloc[:, 0] == names].tolist()
@@ -28,40 +29,105 @@ def getDataFrames(path):
 
     return data, krim
 
-def validTask(task):
-    if any(char.isdigit() for char in task):
+def format_number(number_str):
+    number = int(number_str)
+    formatted_number = '{:,.0f}'.format(number).replace(",", " ")
+    return str(formatted_number)
+
+def is_valid_time_format(time_str, char):
+    # Define a regular expression pattern for the format hh:mm
+    pattern = r'^([01]?[0-9]|2[0-3])' + re.escape(char) + r'[0-5][0-9]$'
+    return re.match(pattern, time_str)
+
+def missing_first_digit(time_str):
+    # Define a regular expression pattern for the format h:mm
+    patternA = r'^([0-9]|1[0-9]|2[0-3]):[0-5][0-9]$'    
+    patternB = r'^([0-9]|1[0-9]|2[0-3]).[0-5][0-9]$'    
+
+    return re.match(patternA, time_str) or re.match(patternB, time_str)
+    
+def format_time(time_str):
+
+    if is_valid_time_format(time_str, ':'):
+        return time_str
+    elif is_valid_time_format(time_str, '.'):
+        return time_str.replace('.', ':')
+    elif missing_first_digit(time_str):
+        return ('0' + time_str).replace('.', ':')
+
+def numberOfDigits(personnummer):
+    count = 0
+    for char in personnummer:
+        if char.isdigit():
+            count += 1
+    return count
+
+def personnummer(personnummer):
+    if numberOfDigits(personnummer) == 4:
+        return 'xxxxxx-' + personnummer
+    elif numberOfDigits(personnummer) == 6:
+        return personnummer + '-xxxx'
+    else:
+        return personnummer
+
+def modifyRow(row):
+    row = row[columns_to_keep].copy()
+    row['Distrikt'] = row['Distrikt'].lower().capitalize()
+    row['Tjänst'] = taskMapping[row['Tjänst'].lower()]
+    row['Kostnad'] = format_number(row['Kostnad'])
+    row['Tid'] = format_time(str(row['Tid']))
+    row['Pers.nr.'] = personnummer(str(row['Pers.nr.']))
+    print(row, 1)
+    return row
+
+
+def copyRow_exact(data, i):
+    row = data.iloc[i].copy()
+    return row
+
+def validPlace(place):
+    for p in places:
+        if place in p.aliases:
+            return True
+    return False
+
+def valid_row(row):
+    if (isinstance(row, int) or isinstance(row, str)) or str(row['Distrikt']).lower() == "nan":
         return False
-    if task.lower() not in Task.create_validTasks():
+    if not validPlace(str(row['Distrikt']).lower()):
+        return False
+    if str(row['Tid']) == "nan":
+        return False
+    if str(row['Tjänst']).lower() not in taskMapping:
+        return False
+    if numberOfDigits(str(row['Pers.nr.'])) != 4 and numberOfDigits(str(row['Pers.nr.'])) != 6 and numberOfDigits(str(row['Pers.nr.'])) != 10:
+        return False
+    if str(row['Kostnad']) == "nan":
         return False
     return True
-    
-def copySpecificCols(data, i):
-    row = data.iloc[i].copy()
-    row = row[columns_to_keep] 
-    row['Tjänst'] = Task.create_validTasks()[row['Tjänst'].lower()]
-    row['Kostnad'] = Task.price(row['Tjänst'], row['Distrikt'])
-    return row
-    
+
+
 #8 col
 def fillMap(map, df, krim):
     for i in range(df.shape[0]):    #iterate map with regular places
-        row = copySpecificCols(df, i)
+        row = copyRow_exact(df, i)
         for place in map:
             site = str(row.loc['Distrikt']).lower()
 
             if site in place.aliases and not row.empty:
-                if validTask(str(row.loc['Tjänst'])):
-                    map[place].loc[len(map[place].reset_index(drop=True))] = row
+                if valid_row(df.iloc[i]):
+                    print("hej")
+                    map[place].loc[len(map[place].reset_index(drop=True))] = modifyRow(row)
                 else:
                     p = Place("misnamed", {"misnamed", "felnamn"})
                     map[p].loc[len(map[p])] = row
                 break
     for i in range(krim.shape[0]):  #iterate map with krimvården
-        row = copySpecificCols(krim, i)
+        row = copyRow_exact(krim, i)
         if not row.empty:
             p = Place("krim", ["kvv", "krim"])
-            if validTask(str(row.loc['Tjänst'])):
-                map[p].loc[len(map[p])] = row
+            if valid_row(str(row.loc['Tjänst'])):
+                map[p].loc[len(map[p])] = modifyRow(row)
             else:
                 map[Place("misnamed", {"misnamed", "felnamn"})].loc[len(map[Place("misnamed", {"misnamed", "felnamn"})])] = row
 
@@ -77,21 +143,12 @@ def createPlaces():  #manually create the places
     nord = Place("nord", {"nord", "norrort","norrort", "nord", "solna"})
     return [norrtalje, sodertalje, syd, city, misnamed, krim, nord]
 
-
-def district_col(data):
-    if ('Distrikt' or 'distrikt') in data.columns:
-        district_column_index = data.columns.get_loc('Distrikt')
-    else:
-        district_column_index = 2
-    return district_column_index
-
 def getDistrictData(name, map):
     for place in map:
         if name in place.aliases:
             return map[place]
 
 def run(path, map):
-    #path = "/Users/victorpekkari/Documents/salg/data/test.xlsx"
     data, krim = getDataFrames(path)
     fillMap(map, data, krim)
 
@@ -109,4 +166,4 @@ def iter_folder(folder_path, target_folder):
         write(outputPath, map[place])
 
 
-#run("/Users/victorpekkari/Documents/salg/data", "/Users/victorpekkari/Documents/salg/output")
+iter_folder("/Users/victorpekkari/Documents/salg/data", "bert")

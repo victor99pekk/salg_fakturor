@@ -9,10 +9,39 @@ misnamed = Place("misnamed", {"misnamed", "felnamn"})
 nord = Place("nord", {"nord", "norrort","norrort", "nord", "solna"})
 places = [norrtalje, sodertalje, syd, city, misnamed, krim, nord]
 
+# -------------------
+
+
 columns_to_keep = ['Datum','Tid', 'Tjänst', 'Distrikt', 'Pers.nr.', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']
+
+# -------------------
 
 path = '/salg_fakturor/'
 
+# -------------------
+
 file_format = '.xls'
 
+# -------------------
+
 start = 3
+
+# -------------------
+
+taskMapping = {}
+taskMapping['blodprov'] = 'Blod'
+taskMapping['blod'] = 'Blod'
+taskMapping['medicinsk undersökning'] = 'Arrestvård'
+taskMapping['arrestvård'] = 'Arrestvård'
+taskMapping['död'] = 'Död'
+taskMapping['dödsfall'] = 'Död'
+taskMapping['rape-kit'] = 'Rape kit'
+taskMapping['rape kit'] = 'Rape kit'
+taskMapping['Rape kit'] = 'Rape kit'
+taskMapping['rättintyg'] = 'kroppsbesiktning+rättsintyg'
+taskMapping['kroppsbesiktning+rättsintyg'] = 'kroppsbesiktning+rättsintyg'
+taskMapping['kroppsbesiktning'] = 'kroppsbesiktning+rättsintyg'
+
+# -------------------
+
+priceMapping = {}
