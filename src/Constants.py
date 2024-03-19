@@ -14,3 +14,5 @@ columns_to_keep = ['Datum','Tid', 'Tjänst', 'Distrikt', 'Pers.nr.', 'Resor (km)
 path = '/salg_fakturor/'
 
 file_format = '.xls'
+
+start = 3
