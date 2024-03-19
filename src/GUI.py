@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from test import iter_folder
+from PyQt5.QtCore import Qt, QObject, QEvent
 import Place as Place
 
 columns_to_keep = ['Datum','Tid', 'Tjänst', 'Distrikt', 'Pers.nr.', 'Resor (km)', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']
@@ -38,6 +39,7 @@ class DragDropWidget(QWidget):
         self.textBox.setPlaceholderText("Namnge folder:     (ex: Januari21)")
         self.textBox.setMaximumHeight(35)
         self.textBox.setFont(font1)
+        self.textBox.installEventFilter(self)
 
         self.button = QPushButton("Sammanställ")
         self.button.setFont(font2)
@@ -70,6 +72,16 @@ class DragDropWidget(QWidget):
         layout.addWidget(self.textBox)
 
         self.setLayout(layout)
+    
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
+            print("Enter key pressed")
+            self.click()
+    def eventFilter(self, obj, event):
+        if obj is self.textBox and event.type() == QEvent.KeyPress and (event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter):
+            self.button.click()
+            return True
+        return super().eventFilter(obj, event)
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls():
@@ -82,7 +94,7 @@ class DragDropWidget(QWidget):
             file_path = url.toLocalFile()
             self.inputPath = file_path
     
-    def click(self, event):
+    def click(self):
         self.targetFolder = self.textBox.toPlainText()
         if self.targetFolder == "" or self.inputPath == "":
             self.text_field.setText("Namnge folder")
