@@ -24,7 +24,7 @@ def write(fileName, df):
     workbook = xlsx.Workbook(file)
     workbook = xlsx.Workbook(file, {'nan_inf_to_errors': True})
     sheet = workbook.add_worksheet('Sheet2')
-    yellow_format = workbook.add_format({'bg_color': 'yellow', 'font_size': 14})
+    yellow_format = workbook.add_format({'bg_color': 'yellow', 'font_size': 14, 'bold':True})
 
     column_width = 20  # 20 characters wide
     sheet.set_column(0, len(df.columns) - 1, column_width)

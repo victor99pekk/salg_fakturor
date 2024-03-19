@@ -54,6 +54,9 @@ def format_time(time_str):
         return time_str.replace('.', ':')
     elif missing_first_digit(time_str):
         return ('0' + time_str).replace('.', ':')
+    
+def valid_time(time_str):
+    return is_valid_time_format(time_str, ':') or is_valid_time_format(time_str, '.') or missing_first_digit(time_str)
 
 def numberOfDigits(personnummer):
     count = 0
@@ -77,7 +80,9 @@ def modifyRow(row):
     row['Kostnad'] = format_number(row['Kostnad'])
     row['Tid'] = format_time(str(row['Tid']))
     row['Pers.nr.'] = personnummer(str(row['Pers.nr.']))
-    print(row, 1)
+    district = placeMapping[row['Distrikt'].lower()].lower()
+    op = taskMapping[row['Tjänst'].lower()]
+    row['Kostnad'] = price_place_task[district][op]
     return row
 
 
@@ -96,13 +101,11 @@ def valid_row(row):
         return False
     if not validPlace(str(row['Distrikt']).lower()):
         return False
-    if str(row['Tid']) == "nan":
+    if not valid_time(str(row['Tid'])):
         return False
     if str(row['Tjänst']).lower() not in taskMapping:
         return False
     if numberOfDigits(str(row['Pers.nr.'])) != 4 and numberOfDigits(str(row['Pers.nr.'])) != 6 and numberOfDigits(str(row['Pers.nr.'])) != 10:
-        return False
-    if str(row['Kostnad']) == "nan":
         return False
     return True
 

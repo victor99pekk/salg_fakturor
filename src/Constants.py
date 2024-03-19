@@ -44,4 +44,29 @@ taskMapping['kroppsbesiktning'] = 'kroppsbesiktning+rättsintyg'
 
 # -------------------
 
-priceMapping = {}
+# Example using manual declaration
+price_place_task = {
+    'city': {'Blod': 3900, 'Arrestvård': 900, 'Död': 7000, 'Rape kit': 5200, 'Urinprov':1200, 'Utryckning utan uppdrag':1200, 'kroppsbesiktning+rättsintyg':'?'},
+    'nord': {'Blod': 1800, 'Arrestvård': 2300, 'Död': 7000, 'Rape kit': 7200, 'Urinprov':1200, 'Utryckning utan uppdrag':1200, 'kroppsbesiktning+rättsintyg':'?'},
+    'syd': {'Blod': 2200, 'Arrestvård': 2200, 'Död': 7000, 'Rape kit': 5000, 'Urinprov':1200, 'Utryckning utan uppdrag':1200, 'kroppsbesiktning+rättsintyg':'?'},
+    'sodertälje': {'Blod': 3000, 'Arrestvård': 3120, 'Död': 3240, 'Rape kit': 7200, 'Urinprov':1200, 'Utryckning utan uppdrag':1200, 'kroppsbesiktning+rättsintyg':'?'},
+    'norrtälje':{'Blod': 3000, 'Arrestvård': 3120, 'Död': 3240, 'Rape kit': 7200, 'Urinprov':1200, 'Utryckning utan uppdrag':1200, 'kroppsbesiktning+rättsintyg':'?'},
+}
+
+placeMapping = {
+    'solna': 'nord',
+    'city': 'city',
+    'nord': 'nord',
+    'syd': 'syd',
+    'södertalje': 'södertalje',
+    'norrtalje': 'norrtalje',
+    'krim': 'krim',
+    'sollentuna': 'nord',
+    'västberga': 'syd',
+    'flemingsberg': 'syd',
+    'nacka': 'syd',
+    'norrmalm': 'city',
+    'södermalm': 'city',
+    'östermalm': 'city',
+    'norrtälje': 'norrtälje',
+}
