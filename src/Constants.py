@@ -30,6 +30,14 @@ file_format = '.xls'
 
 # -------------------
 
+path_to_salg = '/Users/victorpekkari/Documents/salg'
+
+# -------------------
+
+input_start_row = 10
+
+# -------------------
+
 start = 3
 
 # -------------------

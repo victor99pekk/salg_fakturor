@@ -1,7 +1,6 @@
 from openpyxl import Workbook
 import os
 import xlsxwriter as xlsx
-from Constants import path, file_format, start
 import random
 from Constants import *
 import string
@@ -13,20 +12,23 @@ def create_xls_file(file_path):
 
 def createTime():
     array = []
-    threeNbr = random.random()
+    threeNbr = random.randint(0, 2)
     length = 5
 
     char = random.choice([':', '.'])
     string = ""
 
-    if threeNbr < 0.5:
+    if threeNbr == 0:
         length = 4
     for i in range(length):
-        nbr = random.randint(0, 9)
-        if i != 2:
-            string = char[random.randint(0, 1)] + string
+        if i == 2:
+            string = char + string
+            continue
+        if i < 2:
+            nbr = str(random.randint(0, 9))
         else:
-            string = str(nbr) + string
+            nbr = str(random.randint(0, 2))
+        string = nbr + string
     return string
 
 
@@ -34,7 +36,10 @@ def createDate():
     return '2403' + str(random.randint(1, 30))
 
 def getDistrict():
-    return random.choice(list(placeMapping.keys()))
+    choice = random.choice(list(placeMapping.keys()))
+    while choice == 'krim' or choice == 'kvv':
+        choice = random.choice(list(placeMapping.keys()))
+    return choice
 
 def getTask():
     return random.choice(list(taskMapping.keys()))
@@ -70,22 +75,48 @@ def cost():
         return cost + ' kr'
 
 def Moms():
-
-    if random.randint(0,1) == 0:
+    rand = random.randint(0, 3)
+    if rand == 0:
         return str(random.random())
-    if random.randint(0,1) == 0:
+    if rand == 1:
         return str(random.random())
-    return str(random.random()) + '%'
-
-
-
+    if rand == 2:
+        return str(random.random()) + '%'
+    if rand == 3:
+        return str(random.random())+ ' %'
     
+def travels():
+    rand = random.randint(0,1)
+    if rand == 0:
+        return 0
+    elif rand == 1:
+        return random.randint(1, 80)
+    elif rand == 2:
+        return random.randint(1, 80) + 'km'
+    elif rand == 3:
+        return random.randint(1, 80) + ' km'
+
+def boxValue(string):
+    if string == 'Datum':
+        return createDate()
+    elif string == 'Tjänst':
+        return getTask()
+    elif string == 'Tid':
+        return createTime()
+    elif string == 'Distrikt':
+        return getDistrict()
+    elif string == 'Pers.nr.':
+        return persNbr()
+    elif string == 'Kostnad' or string == 'Momsbelopp' or 'Resor (kostnad)':
+        return cost()
+    elif string == 'Moms':
+        return Moms()
+    elif string == 'Resor (km)':
+        return travels()
 
 
-def write(fileName, df):
-    current_row = start
-    desktop = os.path.normpath(os.path.expanduser("~/Desktop"))
-    file = desktop + path + fileName + file_format
+def write(fileName):
+    file = path_to_salg + '/created/' + fileName + file_format
     os.makedirs(os.path.dirname(file), exist_ok=True)
 
     if not os.path.exists(file):
@@ -98,20 +129,26 @@ def write(fileName, df):
     yellow_format = workbook.add_format({'bg_color': 'yellow', 'font_size': 14, 'bold':True})
 
     column_width = 20  # 20 characters wide
-    sheet.set_column(0, len(df.columns) - 1, column_width)
+    sheet.set_column(0, len(required_columns) - 1, column_width)
     header_format = workbook.add_format({'font_size': 20})  # Adjust font size as needed
     sheet.write(0, 0, fileName.split("/")[0], header_format)
 
     # Write column names to the first row
-    for j, col_name in enumerate(df.columns):
-        sheet.write(1, j, col_name, yellow_format)
-        current_row += 1
+    for j, col_name in enumerate(required_columns):
+        sheet.write(input_start_row, j, col_name, yellow_format)
 
     # Write the DataFrame data
-    for i, row in enumerate(df.values):
-        for j, value in enumerate(row):
-            sheet.write(i + 2, j, value)  # Start writing data from the third row
-            current_row += 1
+    count = 1
+    for i in range(input_start_row+1, 200):
+        for j in range(len(required_columns)):
+            sheet.write(i, j, boxValue(str(required_columns[j])))
 
     # Save the workbook to the file
     workbook.close()
+
+def create_10_files():
+    for i in range(10):
+        file = 'file' + str(i)
+        write(file, )
+create_10_files()
+

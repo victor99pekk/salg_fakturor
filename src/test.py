@@ -71,11 +71,18 @@ def personnummer(personnummer):
     else:
         return personnummer
 
+def fixNbr(nbr):
+    nbr.replace(" ", "")
+    nbr = ''.join(char for char in nbr if char.isdigit())
+    return nbr + ' kr'
+
 def modifyRow(row):
     row = row[columns_to_keep].copy()
     row['Distrikt'] = row['Distrikt'].lower().capitalize()
     row['Tjänst'] = taskMapping[row['Tjänst'].lower()]
-    row['Kostnad'] = format_number(row['Kostnad'])
+    nbrA = row['Kostnad']
+    nbrA = fixNbr(nbrA)
+    row['Kostnad'] = nbrA
     row['Tid'] = format_time(str(row['Tid']))
     row['Pers.nr.'] = personnummer(str(row['Pers.nr.']))
     district = placeMapping[row['Distrikt'].lower()].lower()
@@ -152,7 +159,7 @@ def sameColumns(col1, col2):
     for i in range(len(col1)-1):
         if col1[i] != col2[i]:
             return False
-    return False
+    return True
 
 def run(path, map, runProgram):
     data, krim = getDataFrames(path)
@@ -171,6 +178,7 @@ def iter_folder(folder_path, target_folder):
         map[place] = pd.DataFrame(columns=columns_to_keep)
 
     for filename in os.listdir(folder_path):
+        print(filename)
         file_path = os.path.join(folder_path, filename)
         if os.path.isfile(file_path) and filename.endswith('.xls'):
             success = run(file_path, map, runProgram)
@@ -184,4 +192,4 @@ def iter_folder(folder_path, target_folder):
     return filesWithWrongFormat
 
 
-iter_folder("/Users/victorpekkari/Documents/salg/bigData", "bert")
+iter_folder("/Users/victorpekkari/Documents/salg/created", "testcreatedA")
