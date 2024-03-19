@@ -10,3 +10,7 @@ nord = Place("nord", {"nord", "norrort","norrort", "nord", "solna"})
 places = [norrtalje, sodertalje, syd, city, misnamed, krim, nord]
 
 columns_to_keep = ['Datum','Tid', 'Tjänst', 'Distrikt', 'Pers.nr.', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']
+
+path = '/salg_fakturor/'
+
+file_format = '.xls'

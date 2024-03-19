@@ -95,17 +95,6 @@ def run(path, map):
     data, krim = getDataFrames(path)
     fillMap(map, data, krim)
 
-""" def sort(inputFolder, outputFolder):
-    dataKeeper = dataKeeper()
-    for filename in os.listdir(inputFolder):
-            file_path = os.path.join(inputFolder, filename)
-            # Check if the current item is a file, and Check if the file has a .xls extension using endswith()
-            if os.path.isfile(file_path) and filename.endswith('.xls'):
-                dataKeeper = run(file_path, dataKeeper)
-    for place in Place.getPlaces():
-        outputPath = outputFolder + "/" + str(place) + ".xls"
-        write(outputPath, dataKeeper.map[place]) """
-
 def iter_folder(folder_path, target_folder):
     map = {}
     for place in places:

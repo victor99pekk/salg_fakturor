@@ -1,21 +1,18 @@
-import pandas as pd
 from openpyxl import Workbook
 import os
-import xlsxwriter as xls
 import xlwt
+from Constants import path, file_format
 
 def getPath(fileName):
-    path = '/Users/victorpekkari/Documents/salg/outputFiles/'
-    #path = '/outputFiles/'
+    desktop = os.path.normpath(os.path.expanduser("~/Desktop"))
     format = '.xls'
-    file = path + fileName + format
+    file = desktop + path + fileName + format
     os.makedirs(os.path.dirname(file), exist_ok=True)
     return file
 
 def write(fileName, df):
-    path = '/Users/victorpekkari/Documents/salg/outputFiles/'
-    format = '.xls'
-    file = path + fileName + format
+    desktop = os.path.normpath(os.path.expanduser("~/Desktop"))
+    file = desktop + path + fileName + file_format
     os.makedirs(os.path.dirname(file), exist_ok=True)
 
     if not os.path.exists(file):

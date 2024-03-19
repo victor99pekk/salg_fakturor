@@ -1,11 +1,8 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from test import iter_folder
-from PyQt5.QtCore import Qt, QObject, QEvent
+from PyQt5.QtCore import Qt, QEvent
 import Place as Place
-
-columns_to_keep = ['Datum','Tid', 'Tjänst', 'Distrikt', 'Pers.nr.', 'Resor (km)', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']
-
 
 class DragDropWidget(QWidget):
     def __init__(self):
