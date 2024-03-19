@@ -1,0 +1,4 @@
+desktop = os.path.expanduser("~/Desktop")
+
+# the above is valid on Windows (after 7) but if you want it in os normalized form:
+desktop = os.path.normpath(os.path.expanduser("~/Desktop"))

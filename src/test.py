@@ -3,10 +3,7 @@ import pandas as pd
 from Place import Place
 from Task import Task
 from WriteToExcel import write
-
-
-columns_to_keep = ['Datum','Tid', 'Tjänst', 'Distrikt', 'Pers.nr.', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']
-
+from Constants import columns_to_keep, places
 def start_row(df, list_of_names):
     for names in list_of_names:
         list = df.index[df.iloc[:, 0] == names].tolist()
@@ -98,7 +95,7 @@ def run(path, map):
     data, krim = getDataFrames(path)
     fillMap(map, data, krim)
 
-def sort(inputFolder, outputFolder):
+""" def sort(inputFolder, outputFolder):
     dataKeeper = dataKeeper()
     for filename in os.listdir(inputFolder):
             file_path = os.path.join(inputFolder, filename)
@@ -107,7 +104,20 @@ def sort(inputFolder, outputFolder):
                 dataKeeper = run(file_path, dataKeeper)
     for place in Place.getPlaces():
         outputPath = outputFolder + "/" + str(place) + ".xls"
-        write(outputPath, dataKeeper.map[place])
+        write(outputPath, dataKeeper.map[place]) """
+
+def iter_folder(folder_path, target_folder):
+    map = {}
+    for place in places:
+        map[place] = pd.DataFrame(columns=columns_to_keep)
+
+    for filename in os.listdir(folder_path):
+        file_path = os.path.join(folder_path, filename)
+        if os.path.isfile(file_path) and filename.endswith('.xls'):
+            run(file_path, map)
+    for place in map:
+        outputPath = target_folder + "/" + str(place)
+        write(outputPath, map[place])
 
 
 #run("/Users/victorpekkari/Documents/salg/data", "/Users/victorpekkari/Documents/salg/output")

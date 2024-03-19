@@ -1,10 +1,7 @@
-import os
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
-import pandas as pd
-from test import run
+from test import iter_folder
 import Place as Place
-from WriteToExcel import write
 
 columns_to_keep = ['Datum','Tid', 'Tjänst', 'Distrikt', 'Pers.nr.', 'Resor (km)', 'Resor (km)', 'Resor (kostnad)', 'Kostnad']
 
@@ -91,31 +88,11 @@ class DragDropWidget(QWidget):
             self.text_field.setText("Namnge folder")
             self.text_field.setStyleSheet("background-color: red;")
             print(self.targetFolder, self.inputPath)
-            #self.text_edit.setStyleSheet("color: white;")
         else:
-            #run(self.inputPath, self.targetFolder)
-            self.iter_folder(self.inputPath, self.targetFolder)
+            iter_folder(self.inputPath, self.targetFolder)
             self.text_field.setText("Sammanställning klar")
             self.text_field.setStyleSheet("background-color: green;")
             self.textBox.clear()
-
-    def iter_folder(self, folder_path, target_folder):
-        #dataKeeper = DataKeeper()
-        map = {}
-        for place in Place.getPlaces():
-            map[place] = pd.DataFrame(columns=columns_to_keep)
-
-        for filename in os.listdir(folder_path):
-            file_path = os.path.join(folder_path, filename)
-            if os.path.isfile(file_path) and filename.endswith('.xls'):
-                #dataKeeper = run(file_path, target_folder, dataKeeper)
-                print(file_path)
-                run(file_path, map)
-        for place in map:
-            outputPath = target_folder + "/" + str(place)
-            #write(outputPath, dataKeeper.map[place])
-            write(outputPath, map[place])
-
 
     def open_file(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*)")
@@ -130,11 +107,3 @@ class DragDropWidget(QWidget):
             self.folder_label.setText("Vald folder: " + folder_path.split("/")[-1])
             self.folder_label.setStyleSheet("background-color: green;")
             self.inputPath = folder_path
-
-""" if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = DragDropWidget()
-    window.setWindowTitle("Faktura Sammanställare")
-    window.setGeometry(100, 100, 400, 300)
-    window.show()
-    sys.exit(app.exec_()) """
