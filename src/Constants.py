@@ -16,6 +16,12 @@ columns_to_keep = ['Datum','Tid', 'Tjänst', 'Distrikt', 'Pers.nr.', 'Resor (km)
 
 # -------------------
 
+required_columns = ['Datum','Tid','Distrikt','Tjänst','Pers.nr.','K-nummer',
+                    'Kostnad','Moms','Momsbelopp','Resor (km)','Resor (kostnad)',
+                    'Moms (resa)', 'None']
+
+# -------------------
+
 path = '/salg_fakturor/'
 
 # -------------------

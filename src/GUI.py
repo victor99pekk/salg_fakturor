@@ -98,9 +98,16 @@ class DragDropWidget(QWidget):
             self.text_field.setStyleSheet("background-color: red;")
             print(self.targetFolder, self.inputPath)
         else:
-            iter_folder(self.inputPath, self.targetFolder)
-            self.text_field.setText("Sammanställning klar")
-            self.text_field.setStyleSheet("background-color: green;")
+            list = iter_folder(self.inputPath, self.targetFolder)
+            if list:
+                message = "Felaktig fil: "
+                for i in list:
+                    message += i + ", "
+                self.text_field.setText(message)
+                self.text_field.setStyleSheet("background-color: red;")
+            else:
+                self.text_field.setText("Sammanställning klar")
+                self.text_field.setStyleSheet("background-color: green;")
             self.textBox.clear()
 
     def open_file(self):

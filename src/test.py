@@ -2,7 +2,6 @@ import os
 import re
 import pandas as pd
 from Place import Place
-from Task import Task
 from WriteToExcel import *
 from Constants import *
 def start_row(df, list_of_names):
@@ -22,10 +21,11 @@ def getDataFrames(path):
     data.rename(columns=df.iloc[start-1], inplace=True)
     data.dropna(subset=[data.columns[1]], inplace=True)
 
+    print(data)
+
     krim = df.iloc[krimvard:].copy()
     krim.rename(columns=df.iloc[start-1], inplace=True)
     krim.dropna(subset=[krim.columns[1]], inplace=True)
-
 
     return data, krim
 
@@ -151,22 +151,42 @@ def getDistrictData(name, map):
         if name in place.aliases:
             return map[place]
 
-def run(path, map):
+def sameColumns(col1, col2):
+    for i in range(len(col1)-1):
+        if col1[i] != col2[i]:
+            return False
+    return True
+
+def run(path, map, runProgram):
     data, krim = getDataFrames(path)
+    print(data.columns)
+    print(required_columns)
+    if not sameColumns(data.columns, required_columns):
+        return path.split("/")[-1]
+    if not runProgram:
+        return ""
     fillMap(map, data, krim)
+    return ""
 
 def iter_folder(folder_path, target_folder):
     map = {}
+    filesWithWrongFormat = []
+    runProgram = True
     for place in places:
         map[place] = pd.DataFrame(columns=columns_to_keep)
 
     for filename in os.listdir(folder_path):
         file_path = os.path.join(folder_path, filename)
         if os.path.isfile(file_path) and filename.endswith('.xls'):
-            run(file_path, map)
-    for place in map:
-        outputPath = target_folder + "/" + str(place)
-        write(outputPath, map[place])
+            success = run(file_path, map, runProgram)
+            if success != "":
+                filesWithWrongFormat.append(success)
+                runProgram = False
+    if runProgram:
+        for place in map:
+            outputPath = target_folder + "/" + str(place)
+            write(outputPath, map[place])
+    return filesWithWrongFormat
 
 
 iter_folder("/Users/victorpekkari/Documents/salg/data", "bert")
