@@ -4,6 +4,7 @@ import xlsxwriter as xlsx
 from Constants import path, file_format, start
 import random
 from Constants import *
+import string
 
 
 def create_xls_file(file_path):
@@ -41,12 +42,40 @@ def getTask():
 def persNbr():
     string = ""
     length = 4
-    if random.randint(0, 2) == 0:
-    if 
+    nbr = random.randint(0, 2)
+    if nbr == 0:
+        return 'okänd'
+    elif nbr == 1:
         length = 6
     for i in range(length):
         string += str(random.randint(0,9))
-    
+    return string
+
+def random_string():
+    length = random.randint(1, 12)
+    characters = string.ascii_letters + string.digits + string.punctuation
+
+    # Generate a random string of specified length
+    random_string = ''.join(random.choice(characters) for _ in range(length))
+    return random_string
+
+def cost():
+    cost = str(random.randint(1000, 10000))
+    randomNbr = random.randint(0, 2)
+    if randomNbr == 0:
+        return cost
+    elif randomNbr == 1:
+        return cost + 'kr'
+    else:
+        return cost + ' kr'
+
+def Moms():
+
+    if random.randint(0,1) == 0:
+        return str(random.random())
+    if random.randint(0,1) == 0:
+        return str(random.random())
+    return str(random.random()) + '%'
 
 
 
