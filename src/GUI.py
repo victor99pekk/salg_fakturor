@@ -15,12 +15,12 @@ class DragDropWidget(QWidget):
         layout = QVBoxLayout()
         font1 = QFont("Arial", 20)  # Set font family and size
         font2 = QFont("Arial", 15,)
-        fontError = QFont("Arial", 10)
+        self.fontError = QFont("Arial", 11)
 
         self.instruct = QTextEdit(self)
         self.instruct.setFont(font2)
         self.instruct.setPlaceholderText("1. välj input folder (folder med fakturor som ska sammanställas)\n2. Namnge output folder(namn för foldern där excelfilerna kommer ligga)\n3. Klicka på 'Sammanställ'")
-        self.instruct.setMinimumHeight(100)
+        self.instruct.setMinimumHeight(200)
         self.instruct.setReadOnly(True)
         layout.addWidget(self.instruct)
 
@@ -111,10 +111,12 @@ class DragDropWidget(QWidget):
         else:
             list = iter_folder(self.inputPath, self.targetFolder)
             if list:
-                message = "Felaktigt format på följande: "
+                message = "Felaktigt format på följande: \n"
                 for i in list:
-                    message += i + ", "
-                self.error.setText(message)
+                    message += i + "\n"
+                #self.error.setText(message)
+                self.instruct.setFont(self.fontError)
+                self.instruct.setPlaceholderText(message)
                 self.text_field.setStyleSheet("background-color: red;")
                 self.text_field.setText("programmet kördes inte")
             else:

@@ -152,7 +152,7 @@ def sameColumns(col1, col2):
     for i in range(len(col1)-1):
         if col1[i] != col2[i]:
             return False
-    return True
+    return False
 
 def run(path, map, runProgram):
     data, krim = getDataFrames(path)
@@ -177,11 +177,11 @@ def iter_folder(folder_path, target_folder):
             if success != "":
                 filesWithWrongFormat.append(success)
                 runProgram = False
-    if runProgram:
-        for place in map:
-            outputPath = target_folder + "/" + str(place)
-            write(outputPath, map[place])
+    #if runProgram:
+    for place in map:
+        outputPath = target_folder + "/" + str(place)
+        write(outputPath, map[place])
     return filesWithWrongFormat
 
 
-iter_folder("/Users/victorpekkari/Documents/salg/data", "bert")
+iter_folder("/Users/victorpekkari/Documents/salg/bigData", "bert")
