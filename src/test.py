@@ -54,7 +54,7 @@ def format_time(time_str):
         return time_str[:2] + ':' + time_str[3:]
     
 def valid_time(time_str):
-    return is_valid_time_format(time_str, ':') or is_valid_time_format(time_str, '.') or missing_first_digit(time_str)
+    return is_valid_time_format(time_str, ':') or is_valid_time_format(time_str, '.') or missing_first_digit(time_str) or numberOfDigits(time_str) == 4
 
 def numberOfDigits(personnummer):
     count = 0
@@ -194,7 +194,7 @@ def iter_folder(folder_path, target_folder):
     #if runProgram:
     for place in map:
         outputPath = target_folder + "/" + str(place)
-        write(outputPath, map[place])
+        write(outputPath, map[place], place)
     return filesWithWrongFormat
 
 

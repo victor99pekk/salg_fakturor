@@ -38,7 +38,7 @@ input_start_row = 9
 
 # -------------------
 
-start = 3
+startWrite = 10
 
 # -------------------
 
@@ -60,10 +60,12 @@ taskMapping['kroppsbesiktning'] = 'kroppsbesiktning+rättsintyg'
 
 # Example using manual declaration
 price_place_task = {
+    'krim': {'Blod': '?', 'Arrestvård': '?', 'Död': '?', 'Rape kit': '?', 'Urinprov':'?', 'Utryckning utan uppdrag':'?', 'kroppsbesiktning+rättsintyg':'?'},
+    'misnamed': {'Blod': '?', 'Arrestvård': '?', 'Död': '?', 'Rape kit': '?', 'Urinprov':'?', 'Utryckning utan uppdrag':'?', 'kroppsbesiktning+rättsintyg':'?'},
     'city': {'Blod': 3900, 'Arrestvård': 900, 'Död': 7000, 'Rape kit': 5200, 'Urinprov':1200, 'Utryckning utan uppdrag':1200, 'kroppsbesiktning+rättsintyg':'?'},
     'nord': {'Blod': 1800, 'Arrestvård': 2300, 'Död': 7000, 'Rape kit': 7200, 'Urinprov':1200, 'Utryckning utan uppdrag':1200, 'kroppsbesiktning+rättsintyg':'?'},
     'syd': {'Blod': 2200, 'Arrestvård': 2200, 'Död': 7000, 'Rape kit': 5000, 'Urinprov':1200, 'Utryckning utan uppdrag':1200, 'kroppsbesiktning+rättsintyg':'?'},
-    'sodertälje': {'Blod': 3000, 'Arrestvård': 3120, 'Död': 3240, 'Rape kit': 7200, 'Urinprov':1200, 'Utryckning utan uppdrag':1200, 'kroppsbesiktning+rättsintyg':'?'},
+    'södertälje': {'Blod': 3000, 'Arrestvård': 3120, 'Död': 3240, 'Rape kit': 7200, 'Urinprov':1200, 'Utryckning utan uppdrag':1200, 'kroppsbesiktning+rättsintyg':'?'},
     'norrtälje':{'Blod': 3000, 'Arrestvård': 3120, 'Död': 3240, 'Rape kit': 7200, 'Urinprov':1200, 'Utryckning utan uppdrag':1200, 'kroppsbesiktning+rättsintyg':'?'},
 }
 
