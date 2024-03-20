@@ -26,6 +26,18 @@ path = '/salg_fakturor/'
 
 # -------------------
 
+discount_blod = {
+    'city': set(),
+    'nord': set(),
+    'syd': set(),
+    'södertälje': set(),
+    'norrtälje': set(),
+    'krim': set(),
+    'misnamed': set()
+}
+
+# -------------------
+
 file_format = '.xls'
 
 # -------------------
@@ -55,6 +67,8 @@ taskMapping['Rape kit'] = 'Rape kit'
 taskMapping['rättintyg'] = 'kroppsbesiktning+rättsintyg'
 taskMapping['kroppsbesiktning+rättsintyg'] = 'kroppsbesiktning+rättsintyg'
 taskMapping['kroppsbesiktning'] = 'kroppsbesiktning+rättsintyg'
+taskMapping['blodprov1'] = 'Blod'
+taskMapping['blodprov2'] = 'Blod'
 
 # -------------------
 

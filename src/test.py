@@ -92,8 +92,13 @@ def modifyRow(row):
     
     if row['Kostnad'] != '?':
         row['Kostnad'] = str(row['Kostnad']) + ' kr'
+    addTime(row)
     return row
 
+def addTime(row):
+    if row['Tjänst'] == 'Blod':
+        count = 0
+        
 
 def copyRow_exact(data, i):
     row = data.iloc[i].copy()
@@ -198,4 +203,4 @@ def iter_folder(folder_path, target_folder):
     return filesWithWrongFormat
 
 
-iter_folder("/Users/victorpekkari/Documents/salg/created", "testcreatedA")
+#iter_folder("/Users/victorpekkari/Documents/salg/created", "testcreatedA")
