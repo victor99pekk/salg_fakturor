@@ -46,12 +46,12 @@ def missing_first_digit(time_str):
     
 def format_time(time_str):
 
-    if is_valid_time_format(time_str, ':'):
-        return time_str
-    elif is_valid_time_format(time_str, '.'):
-        return time_str.replace('.', ':')
-    elif missing_first_digit(time_str):
-        return ('0' + time_str).replace('.', ':')
+    if len(time_str) == 4 and numberOfDigits(time_str) == 4:
+        return time_str[0:2] + ':' + time_str[2:]
+    elif len(time_str) == 4:
+        return '0' + time_str[0] + ':' + time_str[2:]
+    elif len(time_str) == 5: 
+        return time_str[:2] + ':' + time_str[3:]
     
 def valid_time(time_str):
     return is_valid_time_format(time_str, ':') or is_valid_time_format(time_str, '.') or missing_first_digit(time_str)
@@ -68,26 +68,30 @@ def personnummer(personnummer):
         return 'xxxxxx-' + personnummer
     elif numberOfDigits(personnummer) == 6:
         return personnummer + '-xxxx'
+    elif numberOfDigits(personnummer) == 10:
+        return personnummer[0:6] + '-' + personnummer[6:]
     else:
-        return personnummer
+        return 'okänd'
 
-def fixNbr(nbr):
+def fixNbr(nbr, char):
     nbr.replace(" ", "")
     nbr = ''.join(char for char in nbr if char.isdigit())
-    return nbr + ' kr'
+    return nbr + char
 
 def modifyRow(row):
     row = row[columns_to_keep].copy()
     row['Distrikt'] = row['Distrikt'].lower().capitalize()
     row['Tjänst'] = taskMapping[row['Tjänst'].lower()]
-    nbrA = row['Kostnad']
-    nbrA = fixNbr(nbrA)
-    row['Kostnad'] = nbrA
     row['Tid'] = format_time(str(row['Tid']))
     row['Pers.nr.'] = personnummer(str(row['Pers.nr.']))
     district = placeMapping[row['Distrikt'].lower()].lower()
     op = taskMapping[row['Tjänst'].lower()]
-    row['Kostnad'] = price_place_task[district][op]
+    row['Kostnad'] = str(price_place_task[district][op]).replace(" ", "")
+    row['Resor (kostnad)'] = fixNbr(row['Resor (kostnad)'], ' kr')
+    row['Resor (km)'] = fixNbr(row['Resor (km)'], ' km')
+    
+    if row['Kostnad'] != '?':
+        row['Kostnad'] = str(row['Kostnad']) + ' kr'
     return row
 
 
@@ -110,7 +114,7 @@ def valid_row(row):
         return False
     if str(row['Tjänst']).lower() not in taskMapping:
         return False
-    if numberOfDigits(str(row['Pers.nr.'])) != 4 and numberOfDigits(str(row['Pers.nr.'])) != 6 and numberOfDigits(str(row['Pers.nr.'])) != 10:
+    if numberOfDigits(str(row['Pers.nr.'])) != 4 and numberOfDigits(str(row['Pers.nr.'])) != 6 and numberOfDigits(str(row['Pers.nr.'])) != 10 and str(row['Pers.nr.']).replace(" ", "").lower() != 'okänd':
         return False
     return True
 
@@ -124,7 +128,9 @@ def fillMap(map, df, krim):
 
             if site in place.aliases and not row.empty:
                 if valid_row(df.iloc[i]):
+                    # map[place].loc[len(map[place].reset_index(drop=True))] = modifyRow(row)
                     map[place].loc[len(map[place].reset_index(drop=True))] = modifyRow(row)
+
                 else:
                     p = Place("misnamed", {"misnamed", "felnamn"})
                     map[p].loc[len(map[p])] = row

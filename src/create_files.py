@@ -1,4 +1,3 @@
-from openpyxl import Workbook
 import os
 import xlsxwriter as xlsx
 import random
@@ -11,7 +10,6 @@ def create_xls_file(file_path):
     open(file_path, 'w').close()
 
 def createTime():
-    array = []
     threeNbr = random.randint(0, 2)
     length = 5
 
@@ -24,7 +22,11 @@ def createTime():
         if i == 2:
             string = char + string
             continue
-        if i < 2:
+        if i == 1:
+            nbr = str(random.randint(0, 6))
+        elif i == 0:
+            nbr = str(random.randint(0, 9))
+        elif i == 3:
             nbr = str(random.randint(0, 9))
         else:
             nbr = str(random.randint(0, 2))
@@ -77,42 +79,68 @@ def cost():
 def Moms():
     rand = random.randint(0, 3)
     if rand == 0:
-        return str(random.random())
+        return str(random.random())[:4]
     if rand == 1:
-        return str(random.random())
+        return str(random.random())[:4]
     if rand == 2:
-        return str(random.random()) + '%'
+        return str(random.randint(0, 50)) + '%'
     if rand == 3:
-        return str(random.random())+ ' %'
+        return str(random.randint(0, 50)) + ' %'
     
 def travels():
-    rand = random.randint(0,1)
+    rand = random.randint(0,3)
     if rand == 0:
-        return 0
+        return '0'
     elif rand == 1:
-        return random.randint(1, 80)
+        return str(random.randint(1, 80))
     elif rand == 2:
-        return random.randint(1, 80) + 'km'
+        return str(random.randint(1, 80)) + 'km'
     elif rand == 3:
-        return random.randint(1, 80) + ' km'
+        return str(random.randint(1, 80)) + ' km'
 
-def boxValue(string):
-    if string == 'Datum':
+def boxValue(stringA):
+    if stringA == 'Datum':
         return createDate()
-    elif string == 'Tjänst':
+    elif stringA == 'Tjänst':
         return getTask()
-    elif string == 'Tid':
+    elif string == "Moms (resa)":
+        res = Moms()
+        return res
+    elif stringA == 'Resor(km)':
+        res = travels()
+        return res
+    elif stringA == 'Tid':
         return createTime()
-    elif string == 'Distrikt':
+    elif stringA == 'Distrikt':
         return getDistrict()
-    elif string == 'Pers.nr.':
+    elif stringA == 'Pers.nr.':
         return persNbr()
-    elif string == 'Kostnad' or string == 'Momsbelopp' or 'Resor (kostnad)':
+    elif stringA == 'Kostnad' or stringA == 'Momsbelopp' or stringA  == 'Resor(kostnad)':
         return cost()
-    elif string == 'Moms':
+    
+def boxValueNbr(nbr):
+    if nbr == 0:
+        return createDate()
+    elif nbr == 1:
+        return createTime()
+    elif nbr == 2:
+        res = getDistrict()
+        return res
+    elif nbr == 3:
+        res = getTask()
+        return res
+    elif nbr == 4:
+        return persNbr()
+    elif nbr == 5:
+        return random_string()
+    elif nbr == 6:
+        return cost()
+    elif nbr == 7:
         return Moms()
-    elif string == 'Resor (km)':
+    elif nbr == 9:
         return travels()
+
+    return cost()
 
 
 def write(fileName):
@@ -138,10 +166,11 @@ def write(fileName):
         sheet.write(input_start_row, j, col_name, yellow_format)
 
     # Write the DataFrame data
-    count = 1
     for i in range(input_start_row+1, 200):
-        for j in range(len(required_columns)):
-            sheet.write(i, j, boxValue(str(required_columns[j])))
+        for j in range(len(required_columns)-1):
+            col = required_columns[j]
+            sheet.write(i, j, boxValueNbr(j))   
+            #sheet.write(i, j, boxValue(str(required_columns[j])).replace(' ', '').lower().capitalize())   
 
     # Save the workbook to the file
     workbook.close()

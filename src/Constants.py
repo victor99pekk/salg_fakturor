@@ -34,7 +34,7 @@ path_to_salg = '/Users/victorpekkari/Documents/salg'
 
 # -------------------
 
-input_start_row = 10
+input_start_row = 9
 
 # -------------------
 
