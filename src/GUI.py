@@ -86,19 +86,30 @@ class DragDropWidget(QWidget):
         self.setLayout(layout)
 
         self.settings = QSettings("myapp", "mainwindow")
-        self.button_state = self.settings.value("button_state", False, type=bool)
-        self.radio_button1.setChecked(self.button_state)
-        self.radio_button2.setChecked(not self.button_state)
+        is_dark_mode = self.settings.value("radio_state", False, type=bool)
+        if is_dark_mode:
+            self.radio_button1.setChecked(True)
+            self.dark()
+        else:
+            self.radio_button2.setChecked(True)
+            self.light()
 
         self.radio_button1.clicked.connect(self.save_state)
         self.radio_button2.clicked.connect(self.save_state)
 
-        if not self.button_state:
-            self.light()
-
     def save_state(self):
-        # Save the state of the button
-        self.settings.setValue("button_state", self.button.isChecked())
+        # Save the state of the radio button
+        if self.radio_button1.isChecked():
+            self.settings.setValue("radio_state", True)
+            self.dark()
+        else:
+            self.settings.setValue("radio_state", False)
+            self.light()
+    
+    def closeEvent(self, event):
+        # Save state before closing
+        self.save_state()
+        event.accept()
 
     def changeColor(self):
         sender = self.sender()
